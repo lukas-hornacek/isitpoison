@@ -1,8 +1,10 @@
+// @ts-ignore
 interface Canteen {
     id: number,
     name: string
 }
 
+// @ts-ignore
 interface Meal {
     id: number,
     name: string,
@@ -11,12 +13,14 @@ interface Meal {
     uploaded: Date
 }
 
+// @ts-ignore
 interface User {
     id: number,
     username: string,
     password: string
 }
 
+// @ts-ignore
 interface Review {
     id: number,
     meal_id: number,
@@ -25,6 +29,7 @@ interface Review {
     text: string
 }
 
+// @ts-ignore
 interface Like {
     user_id: number,
     review_id: number
