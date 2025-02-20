@@ -1,0 +1,19 @@
+{
+  "name": "isitpoison",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/lukas-hornacek/isitpoison#readme",
+  "bugs": {
+    "url": "https://github.com/lukas-hornacek/isitpoison/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukas-hornacek/isitpoison.git"
+  },
+  "private": true,
+  "author": "lukas-hornacek",
+  "type": "module",
+  "scripts": {
+    "start": "npm run --prefix isitpoison-client build & npm run --prefix isitpoison-server start"
+  }
+}

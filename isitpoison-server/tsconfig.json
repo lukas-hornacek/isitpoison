@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "module": "NodeNext",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "esModuleInterop": true,
+      "outDir": "dist",
+
+      /* type checking */
+      "strict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitAny": true,
+    },
+    "include": ["src"]
+}
