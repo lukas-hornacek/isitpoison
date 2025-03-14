@@ -1,0 +1,15 @@
+a.active {
+    color: red
+}
+
+.btn.active {
+    background-color: red;
+}
+
+.dropdown-item.active {
+    background-color: red;
+}
+
+h2 {
+    text-align: center;
+}

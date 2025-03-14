@@ -1,10 +1,13 @@
-import CanteenItem from "./CanteenItem";
+import Container from "react-bootstrap/Container";
+import Stack from "react-bootstrap/Stack";
 import { useState } from "react";
-import ChangeWeekdayButton from "./ChangeWeekdayButton";
-import { Weekday } from "../common";
+
+import CanteenItem from "./CanteenItem";
+import WeekdayButtons from "./WeekdayButtons";
+import { today } from "../common";
 
 export default function WeeklyView() {
-    const [day, setDay] = useState(0);
+    const [day, setDay] = useState(today());
 
     const canteens = [
         { id: 1, name: "Eat & Meet", location: "loc1" },
@@ -14,25 +17,14 @@ export default function WeeklyView() {
     ];
     const canteenItems = canteens.map(c =>
         <CanteenItem canteen={c} weekday={day} />
-    );
-
-    const days = [
-        Weekday.Monday,
-        Weekday.Tuesday,
-        Weekday.Wednesday,
-        Weekday.Thursday,
-        Weekday.Friday,
-        Weekday.Saturday,
-        Weekday.Sunday
-    ];
-    const navButtons = days.map(d => 
-        <ChangeWeekdayButton setDay={setDay} weekday={d}/>
-    );
+    );   
 
     return (
         <>
-            <nav>{navButtons}</nav>
-            <ul>{canteenItems}</ul>
+            <Container className="d-flex justify-content-center"><WeekdayButtons day={day} setDay={setDay} /></Container>
+            <Stack gap={3}>
+                {canteenItems}
+            </Stack>
         </>
     );
 }
