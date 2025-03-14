@@ -11,18 +11,22 @@ export enum Weekday {
 export function weekdayToString(weekday: Weekday) {
     switch (weekday) {
         case Weekday.Sunday:
-            return "Sunday";
+            return "Nedeľa";
         case Weekday.Monday:
-            return "Monday";
+            return "Pondelok";
         case Weekday.Tuesday:
-            return "Tuesday";
+            return "Utorok";
         case Weekday.Wednesday:
-            return "Wednesday";
+            return "Streda";
         case Weekday.Thursday:
-            return "Thursday";
+            return "Štvrtok";
         case Weekday.Friday:
-            return "Friday";
+            return "Piatok";
         case Weekday.Saturday:
-            return "Saturday";
+            return "Sobota";
     }
+}
+
+export function today(): Weekday {
+    return new Date().getDay();
 }
