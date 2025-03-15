@@ -1,15 +1,24 @@
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+
 import { getAllMeals } from "../data/mock";
 import MealItem from "./MealItem";
+import FilterBar from "./FilterBar";
 
 export default function MealsView() {
     const mealItems = getAllMeals().map(meal =>
-        <MealItem {...meal} />
+        <MealItem key={meal.id} {...meal} />
     );
     
     return (
         <>
-            <h2>Zoznam jedál</h2>
-            <ul>{mealItems}</ul>
+            <h2>Všetky jedlá</h2>
+            <FilterBar />
+            <Container>
+                <Row className="g-4">
+                    {mealItems}
+                </Row>
+            </Container>
         </>
     );
 }
