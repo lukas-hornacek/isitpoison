@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react';
 import { Weekday, weekdayToString } from '../common';
 
 export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: React.Dispatch<React.SetStateAction<number>> }) {
-    const [isSmall, setIsSmall] = useState(window.innerWidth < 576);
+    const smBreakpoint = 576;
+    const [isSmall, setIsSmall] = useState(window.innerWidth < smBreakpoint);
 
     useEffect(() => {
-        const handleResize = () => setIsSmall(window.innerWidth < 576);
+        const handleResize = () => setIsSmall(window.innerWidth < smBreakpoint);
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);

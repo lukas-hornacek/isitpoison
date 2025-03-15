@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Col from 'react-bootstrap/Col';
 
 import { Meal } from "../types";
+import { getMealRating } from "../data/mock";
 
 export default function MealItem({ id, name }: Meal) {
     return (
@@ -10,7 +11,7 @@ export default function MealItem({ id, name }: Meal) {
             <Card style={{ width: "100%", maxWidth: "15em" }} className="shadow">
                 <Card.Body>
                     <Card.Title>{name}</Card.Title>
-                    <Card.Subtitle>Rating: 5</Card.Subtitle>
+                    <Card.Subtitle>Rating: {getMealRating(id)}</Card.Subtitle>
                     <Button>Detail</Button>
                 </Card.Body>
             </Card>
