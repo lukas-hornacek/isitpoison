@@ -1,5 +1,5 @@
 import { Weekday } from "../common";
-import { Canteen, Meal } from "../types";
+import { Canteen, Meal, Review } from "../types";
 
 const canteens = [
     { id: 1, name: "Eat & Meet", location: "loc1" },
@@ -53,6 +53,25 @@ const meals = [
     },
 ];
 
+const reviews = [
+    {
+        id: 1,
+        meal_id: 1,
+        user_id: 1,
+        uploaded: new Date("2025-02-25"),
+        rating: 5,
+        text: "meh..."
+    },
+    {
+        id: 2,
+        meal_id: 1,
+        user_id: 1,
+        uploaded: new Date("2025-02-25"),
+        rating: 10,
+        text: "dokonalé"   
+    }
+];
+
 const ratings = [7, 4.5, 6, 2.1, 10, 1.7];
 
 export function getCanteen(id: number): Canteen {
@@ -90,6 +109,14 @@ export function getMeal(id: number): Meal {
     return meals[id];
 }
 
+export function getReviews(): Review[] {
+    return reviews;
+}
+
 export function getMealRating(id: number): number {
     return ratings[id - 1];
+}
+
+export function getUsername(id: number): string {
+    return id === 9 ? "Example admin" : "Example user";
 }
