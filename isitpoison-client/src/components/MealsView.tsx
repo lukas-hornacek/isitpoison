@@ -7,7 +7,7 @@ import FilterBar from "./FilterBar";
 
 export default function MealsView() {
     const mealItems = getAllMeals().map(meal =>
-        <MealItem key={meal.id} {...meal} />
+        <MealItem key={meal.id} meal={meal} />
     );
     
     return (

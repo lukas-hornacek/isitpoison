@@ -38,7 +38,7 @@ export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: 
         );
     } else {
         const buttons = days.map(d =>
-            <Button key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
+            <Button variant={day === d ? "primary" : 'outline-primary'} key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
         );
 
         return (

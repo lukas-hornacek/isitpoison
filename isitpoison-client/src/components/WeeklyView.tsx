@@ -16,6 +16,7 @@ export default function WeeklyView() {
 
     return (
         <>
+            <h2>Aktuálna ponuka</h2>
             <Container className="d-flex justify-content-center">
                 <WeekdayButtons day={day} setDay={setDay} />
             </Container>

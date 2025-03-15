@@ -10,19 +10,14 @@ export default function FilterBar() {
     const [ordering, setOrdering] = useState(0);
     const [searchText, setSearchText] = useState("");
 
-    const handleSelectedCanteens = () => {
-        console.log(selectedCanteens);
-    };
-    
-    const handleOrdering = () => {
-        console.log(ordering);
-    };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value);
     };
 
     const handleSearch = () => {
+        console.log(selectedCanteens);
+        console.log(ordering);
         console.log(searchText);
     };
 
@@ -52,8 +47,6 @@ export default function FilterBar() {
                     <ToggleButtonGroup type="checkbox" value={selectedCanteens} onChange={setSelectedCanteens} vertical className="w-100">
                         {canteenChecks}
                     </ToggleButtonGroup>
-                    <Dropdown.Divider />
-                    <Button variant="success" className="w-100" onClick={handleSelectedCanteens}>Filtruj</Button>
                 </Dropdown.Menu>
             </Dropdown>
 
@@ -63,8 +56,6 @@ export default function FilterBar() {
                     <ToggleButtonGroup name="ordering" type="radio" value={ordering} onChange={setOrdering} vertical className="w-100">
                         {orderingButtons}
                     </ToggleButtonGroup>
-                    <Dropdown.Divider />
-                    <Button variant="success" className="w-100" onClick={handleOrdering}>Zoraď</Button>
                 </Dropdown.Menu>
             </Dropdown>
 
@@ -72,12 +63,11 @@ export default function FilterBar() {
                 <Form.Control
                     type="text"
                     placeholder="Zadaj názov jedla"
-                    aria-label="Food name"
-                    aria-describedby="searchButton"
+                    aria-label="Názov jedla"
                     onChange={handleInputChange}
                 />
-                <Button id="searchButton" variant="success" onClick={handleSearch}>Vyhľadaj</Button>
             </InputGroup>
+            <Button variant="success" onClick={handleSearch}>Vyhľadaj</Button>
         </ButtonToolbar>
     );
 }
