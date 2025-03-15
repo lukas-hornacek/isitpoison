@@ -11,8 +11,8 @@ export default function WeeklyView() {
     const [day, setDay] = useState(today());
 
     const canteenItems = getCanteens().map(c =>
-        <CanteenItem canteen={c} weekday={day} />
-    );   
+        <CanteenItem key={c.id} canteen={c} weekday={day} />
+    );
 
     return (
         <>

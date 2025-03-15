@@ -8,7 +8,7 @@ import { getMealsForDay } from "../data/mock";
 
 export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, weekday: Weekday }) {
     const mealItems = getMealsForDay(weekday).map(meal =>
-            <MealItem {...meal} />
+            <MealItem key={meal.id} {...meal} />
     );
 
     return (

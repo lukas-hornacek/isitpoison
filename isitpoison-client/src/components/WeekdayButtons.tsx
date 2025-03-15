@@ -28,7 +28,7 @@ export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: 
     
     if (isSmall) {
         const buttons = days.map(d =>
-            <Dropdown.Item onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Dropdown.Item>
+            <Dropdown.Item key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Dropdown.Item>
         );
 
         return (
@@ -38,7 +38,7 @@ export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: 
         );
     } else {
         const buttons = days.map(d =>
-            <Button onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
+            <Button key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
         );
 
         return (
