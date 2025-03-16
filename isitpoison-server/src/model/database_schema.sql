@@ -2,13 +2,13 @@ DROP TABLE IF EXISTS reviews, users, weekly_meals, meals, opening_hours, canteen
 
 CREATE TABLE canteens (
     id serial primary key,
-    name text unique not null,
-    location text not null
+    name text unique not null
 );
 
 -- if X_open is NULL, canteen is not open for day X
-CREATE TABLE opening_hours (
-    id int unique references canteens(id),
+CREATE TABLE canteen_details (
+    canteen_id int unique references canteens(id),
+    location text not null,
     monday_open     time,
     monday_close    time,
     tuesday_open    time,
@@ -43,6 +43,7 @@ CREATE TABLE users (
     id serial primary key,
     username text unique not null,
     password varchar(60) not null,
+    joined date not null,
     is_admin boolean
 );
 
