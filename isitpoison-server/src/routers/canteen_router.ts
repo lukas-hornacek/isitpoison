@@ -80,7 +80,6 @@ const canteen_details = [
     }
 ];
 
-// get list of all canteens
 canteen_router.get("/", async (_req, res) => {
     res.json(canteens);
 });
