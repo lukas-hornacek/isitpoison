@@ -1,10 +1,10 @@
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import { useEffect, useState } from 'react';
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { useEffect, useState } from "react";
 
-import { Weekday, weekdayToString } from '../common';
+import { Weekday, weekdayToString } from "../common";
 
 export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: React.Dispatch<React.SetStateAction<number>> }) {
     const smBreakpoint = 576;
@@ -38,7 +38,7 @@ export default function WeekdayButtons({ day, setDay }: { day: Weekday, setDay: 
         );
     } else {
         const buttons = days.map(d =>
-            <Button variant={day === d ? "primary" : 'outline-primary'} key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
+            <Button variant={day === d ? "primary" : "outline-primary"} key={d} onClick={() => setDay(d)} active={day === d}>{weekdayToString(d)}</Button> 
         );
 
         return (

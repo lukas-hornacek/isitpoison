@@ -67,7 +67,7 @@ export default function FilterBar() {
                     onChange={handleInputChange}
                 />
             </InputGroup>
-            <Button variant="success" onClick={handleSearch}>Vyhľadaj</Button>
+            <Button variant="success" onClick={handleSearch}>Vyhľadaj / Filtruj</Button>
         </ButtonToolbar>
     );
 }
