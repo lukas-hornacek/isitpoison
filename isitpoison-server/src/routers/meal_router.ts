@@ -1,71 +1,35 @@
 import express from "express";
+import { select_meal, select_meals, select_weekly_meals } from "../queries/meal_queries.js";
+import { ordering, Ordering } from "../model/types.js";
 
 export const meal_router = express.Router();
-
-const meals = [
-    {
-        id: 1,
-        name: "Vajíčko",
-        canteen_id: 1,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 7,
-    },
-    {
-        id: 2,
-        name: "Kari",
-        canteen_id: 1,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 4.5,
-    },
-    {
-        id: 3,
-        name: "Zemiak",
-        canteen_id: 1,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 6,
-    },
-    {
-        id: 4,
-        name: "Hranolka",
-        canteen_id: 3,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 2.1,
-    },
-    {
-        id: 5,
-        name: "Ryža",
-        canteen_id: 2,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 10,
-    },
-    {
-        id: 6,
-        name: "Kaša",
-        canteen_id: 3,
-        last_served: new Date("2025-02-25"),
-        uploaded: new Date("2025-02-25"),
-        rating: 1.7,
-    },
-];
 
 meal_router.get("/:canteen_id(\\d+)/:weekday(\\d+)", async (req, res) => {
     const canteen_id = Number(req.params["canteen_id"]);
     const weekday = Number(req.params["weekday"]);
 
-    res.json([meals[weekday - 1], meals[canteen_id - 1]]);
+    res.json((await select_weekly_meals(canteen_id, weekday)).rows);
 });
 
 meal_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json(meals[id - 1]);
+    res.json((await select_meal(id)).rows);
 });
 
-// TODO parses filters from query
-meal_router.get("/", async (_req, res) => {
-    res.json(meals);
+meal_router.get("/", async (req, res) => {
+    let canteen_ids: number[];
+    try {
+        canteen_ids = JSON.parse(req.query["canteens"]?.toString() ?? "[]");
+        for (const id in canteen_ids) {
+            if (typeof id !== "number") throw new Error("");
+        }
+    } catch {
+        console.error("incorrect format of 'canteens' field");
+        canteen_ids = [];
+    }
+    const order = ordering(req.query["ordering"]?.toString() ?? "") ?? Ordering.Alphabetical;
+    const ascending = req.query["descending"] !== undefined;
+    const substring = req.query["substring"]?.toString() ?? "";
+
+    res.json((await select_meals(canteen_ids, order, ascending, substring)).rows);
 });

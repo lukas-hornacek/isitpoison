@@ -1,4 +1,4 @@
-enum Weekday {
+export enum Weekday {
     Sunday = 0,
     Monday = 1,
     Tuesday = 2,
@@ -8,14 +8,32 @@ enum Weekday {
     Saturday = 6,
 }
 
+export enum Ordering {
+    Alphabetical = "name",
+    Rating = "rating",
+    LastServed = "last_served",
+}
+
+export function ordering(string: string): Ordering | undefined {
+    switch (string) {
+        case Ordering.Alphabetical:
+            return Ordering.Alphabetical;
+        case Ordering.Rating:
+            return Ordering.Rating;
+        case Ordering.LastServed:
+            return Ordering.LastServed;
+    }
+    return undefined;
+}
+
 export interface Canteen {
     id: number,
     name: string,
-    location: string
 }
 
 export interface OpeningHours {
     id: number,
+    location: string
     monday_open: Date,
     monday_close: Date,
     tuesday_open: Date,
@@ -49,6 +67,7 @@ export interface User {
     id: number,
     username: string,
     password: string,
+    joined: Date,
     is_admin: boolean
 }
 
