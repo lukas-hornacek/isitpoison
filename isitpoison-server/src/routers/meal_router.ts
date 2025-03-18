@@ -13,23 +13,20 @@ meal_router.get("/:canteen_id(\\d+)/:weekday(\\d+)", async (req, res) => {
 
 meal_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_meal(id)).rows);
+    res.json((await select_meal(id)).rows[0]);
 });
 
 meal_router.get("/", async (req, res) => {
     let canteen_ids: number[];
     try {
         canteen_ids = JSON.parse(req.query["canteens"]?.toString() ?? "[]");
-        for (const id in canteen_ids) {
-            if (typeof id !== "number") throw new Error("");
-        }
     } catch {
         console.error("incorrect format of 'canteens' field");
         canteen_ids = [];
     }
     const order = ordering(req.query["ordering"]?.toString() ?? "") ?? Ordering.Alphabetical;
     const ascending = req.query["descending"] !== undefined;
-    const substring = req.query["substring"]?.toString() ?? "";
+    const substring = req.query["substring"]?.toString().toLowerCase() ?? "";
 
     res.json((await select_meals(canteen_ids, order, ascending, substring)).rows);
 });

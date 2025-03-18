@@ -9,10 +9,10 @@ canteen_router.get("/", async (_req, res) => {
 
 canteen_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_canteen(id)).rows);
+    res.json((await select_canteen(id)).rows[0]);
 });
 
 canteen_router.get("/detail/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_canteen_detail(id)).rows);
+    res.json((await select_canteen_detail(id)).rows[0]);
 });

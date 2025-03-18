@@ -11,12 +11,17 @@ const port = 3000;
 
 app.use(express.json());
 
+app.use((_req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  return next();
+});
+
 app.use(express.static(path.join(import.meta.dirname, "..", "..", "isitpoison-client", "dist")));
 
-app.use("/canteen", canteen_router);
-app.use("/meal", meal_router);
-app.use("/review", review_router);
-app.use("/user", user_router);
+app.use("/api/canteen", canteen_router);
+app.use("/api/meal", meal_router);
+app.use("/api/review", review_router);
+app.use("/api/user", user_router);
 
 app.listen(port, () => {
   console.log(`IsItPoison? listening on port ${port}`);

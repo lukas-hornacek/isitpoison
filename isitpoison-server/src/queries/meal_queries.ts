@@ -34,8 +34,8 @@ export async function select_meals(canteen_ids: number[], ordering: Ordering, as
     }
 
     if (substring !== "") {
-        text += " AND name LIKE $1";
-        values.push("'%" + substring + "%'");
+        text += " AND LOWER(name) LIKE '%' || $1 || '%'";
+        values.push(substring);
     }
 
     text += `
