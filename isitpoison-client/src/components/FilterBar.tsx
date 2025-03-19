@@ -1,42 +1,44 @@
 import { useState } from "react";
-import { Button, ButtonToolbar, Dropdown, Form, InputGroup, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { Button, ButtonToolbar, Dropdown, Form, InputGroup, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { useGetCanteens } from "../data/canteen";
+import { Filters } from "./MealsView";
+import { Ordering, orderingToString } from "../common";
 
-import { getCanteens } from "../data/mock";
-
-export default function FilterBar() {
-    const canteens = getCanteens();
-
-    const [selectedCanteens, setSelectedCanteens] = useState(canteens.map(c => c.id));
-    const [ordering, setOrdering] = useState(0);
-    const [searchText, setSearchText] = useState("");
-
+export default function FilterBar({ filters, setFilters }: { filters: Filters, setFilters: React.Dispatch<React.SetStateAction<Filters>>}) {
+    const { canteens, isLoading } = useGetCanteens();
+    
+    const [selectedCanteens, setSelectedCanteens] = useState(filters.canteen_ids ?? canteens?.map(c => c.id));
+    const [ordering, setOrdering] = useState(filters.ordering ?? Ordering.Alphabetical);
+    const [searchText, setSearchText] = useState(filters.substring ?? "");
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value);
     };
 
     const handleSearch = () => {
-        console.log(selectedCanteens);
-        console.log(ordering);
-        console.log(searchText);
+        setFilters({
+            canteen_ids: selectedCanteens,
+            ordering: ordering,
+            substring: searchText,
+        });
     };
 
-    const canteenChecks = canteens.map(c =>
+    const canteenChecks = isLoading ? <Spinner /> : canteens!.map(c =>
         <ToggleButton
             id={`tbc-${c.id}`}
             key={c.id}
             type="checkbox"
-            variant={selectedCanteens.includes(c.id) ? "primary" : "outline-primary"}
+            variant={selectedCanteens?.includes(c.id) ? "primary" : "outline-primary"}
             value={c.id}>{c.name}</ToggleButton>
     );
-    const orderingButtons = [0, 1, 2, 3].map(o =>
+    const orderingButtons = [Ordering.Alphabetical, Ordering.LastServed, Ordering.Rating].map(o =>
         <ToggleButton
             id={`tbo-${o}`}
             key={o}
             type="radio"
             variant={ordering === o ? "primary" : "outline-primary"}
             value={o}
-        >{o}</ToggleButton>
+        >{orderingToString(o)}</ToggleButton>
     );
 
     return (
@@ -65,6 +67,7 @@ export default function FilterBar() {
                     placeholder="Zadaj názov jedla"
                     aria-label="Názov jedla"
                     onChange={handleInputChange}
+                    value={searchText}
                 />
             </InputGroup>
             <Button variant="success" onClick={handleSearch}>Vyhľadaj / Filtruj</Button>

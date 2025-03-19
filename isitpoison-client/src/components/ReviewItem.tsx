@@ -1,12 +1,15 @@
-import { ListGroupItem } from "react-bootstrap";
+import { ListGroupItem, Spinner } from "react-bootstrap";
 import { Review } from "../types";
-import { getUsername } from "../data/mock";
+import { useGetUser } from "../data/user";
+import AverageRating from "./AverageRating";
 
 export default function ReviewItem({ user_id, rating, text }: Review) {
+    const { user, isLoading } = useGetUser(user_id);
+
     return (
         <ListGroupItem variant="dark">
-            <h4>{getUsername(user_id)}</h4>
-            <div>Rating: {rating}</div>
+            {isLoading ? <Spinner animation="grow" /> : <h4>{user?.username}</h4>}
+            <AverageRating rating={rating}/>
             <div>Text: {text}</div>
         </ListGroupItem>
     );

@@ -4,7 +4,6 @@ import Col from "react-bootstrap/Col";
 import { useState } from "react";
 
 import { Meal } from "../types";
-import { getMealRating } from "../data/mock";
 import MealDetail from "./MealDetail";
 import AverageRating from "./AverageRating";
 
@@ -20,7 +19,7 @@ export default function MealItem({ meal }: { meal: Meal }) {
                 <Card style={{ width: "100%", maxWidth: "15em" }} className="shadow">
                     <Card.Body>
                         <Card.Title>{meal.name}</Card.Title>
-                        <Card.Subtitle><AverageRating rating={getMealRating(meal.id)} /></Card.Subtitle>
+                        <Card.Subtitle><AverageRating rating={Number(meal.rating)} /></Card.Subtitle>
                         <Button onClick={handleShowDetail}>Detail</Button>
                     </Card.Body>
                 </Card>

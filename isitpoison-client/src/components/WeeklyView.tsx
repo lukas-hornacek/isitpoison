@@ -5,12 +5,19 @@ import { useState } from "react";
 import CanteenItem from "./CanteenItem";
 import WeekdayButtons from "./WeekdayButtons";
 import { today } from "../common";
-import { getCanteens } from "../data/mock";
+import { useGetCanteens } from "../data/canteen";
+import { Spinner } from "react-bootstrap";
 
 export default function WeeklyView() {
     const [day, setDay] = useState(today());
 
-    const canteenItems = getCanteens().map(c =>
+    const { canteens, isLoading } = useGetCanteens();
+
+    if (isLoading) {
+        return <Spinner />;
+    }
+
+    const canteenItems = canteens?.map(c =>
         <CanteenItem key={c.id} canteen={c} weekday={day} />
     );
 

@@ -30,3 +30,20 @@ export function weekdayToString(weekday: Weekday) {
 export function today(): Weekday {
     return new Date().getDay();
 }
+
+export enum Ordering {
+    Alphabetical = "name",
+    Rating = "rating",
+    LastServed = "last_served",
+}
+
+export function orderingToString(ordering: Ordering): string {
+    switch (ordering) {
+        case Ordering.Alphabetical:
+            return "Abecedne";
+        case Ordering.Rating:
+            return "Najvyššie hodnotené";
+        case Ordering.LastServed:
+            return "Naposledy servírované";
+    }
+}

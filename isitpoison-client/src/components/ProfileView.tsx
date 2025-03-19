@@ -1,24 +1,27 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 
 import ReviewList from "./ReviewList";
-import { getReviews, getUsername } from "../data/mock";
+import { useGetUser } from "../data/user";
+import { useGetReviewsByUser } from "../data/review";
 
 export default function ProfileView() {
-    const username = getUsername(0);
-
+    const user = useGetUser(1);
+    const reviews = useGetReviewsByUser(1);
+    
     return (
         <>
             <h2>Profil</h2>
             <Container>
                 <Row>
                     <Col sm={12} md={3}>
-                        <h3>{username}</h3>
-                        Používateľom od 25.2.2025 <br></br>
-                        Počet recenzií: 5
+                        {user.isLoading ? <Spinner animation="grow" />
+                        : <><h3>{user.user?.username}</h3>
+                        Používateľom od {user.user?.joined.toString()} <br></br>
+                        Počet recenzií: {user.user?.reviews}</>}
                     </Col>
                     <Col sm={12} md={9}>
                         <h3>Moje recenzie</h3>
-                        <ReviewList reviews={getReviews()}/>
+                        {reviews.isLoading ? <Spinner animation="grow" /> : <ReviewList reviews={reviews.reviews!}/>}
                     </Col>
                 </Row>
             </Container>

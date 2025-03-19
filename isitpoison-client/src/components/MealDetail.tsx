@@ -1,10 +1,12 @@
-import { Container, Modal, Stack } from "react-bootstrap";
-import { getMealRating, getReviews } from "../data/mock";
+import { Container, Modal, Spinner, Stack } from "react-bootstrap";
 import { Meal } from "../types";
 import ReviewList from "./ReviewList";
 import AverageRating from "./AverageRating";
+import { useGetReviewsByMeal } from "../data/review";
 
 export default function MealDetail({ meal, show, handleClose }: { meal: Meal, show: boolean, handleClose: () => void }) {
+    const { reviews, isLoading } = useGetReviewsByMeal(meal.id);
+    
     return (
         <>
             <Modal show={show} onHide={handleClose} centered size="lg">
@@ -12,12 +14,12 @@ export default function MealDetail({ meal, show, handleClose }: { meal: Meal, sh
                     <Stack>
                         <h2>{meal.name}</h2>
                         <Container className="d-flex justify-content-center">
-                            <AverageRating rating={getMealRating(meal.id)}/>
+                            <AverageRating rating={Number(meal.rating)}/>
                         </Container>
                     </Stack>
                 </Modal.Header>
                 <Modal.Body>
-                    <ReviewList reviews={getReviews()}/>
+                    {isLoading ? <Spinner animation="grow" /> : <ReviewList reviews={reviews!}/>}
                 </Modal.Body>
             </Modal> 
         </>
