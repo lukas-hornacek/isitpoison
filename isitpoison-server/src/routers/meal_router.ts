@@ -13,7 +13,13 @@ meal_router.get("/:canteen_id(\\d+)/:weekday(\\d+)", async (req, res) => {
 
 meal_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_meal(id)).rows[0]);
+
+    const result = await select_meal(id);
+
+    if (result.rowCount === 0) {
+        res.status(404).send("Meal not found.");
+    }
+    res.json(result.rows[0]);
 });
 
 meal_router.get("/", async (req, res) => {

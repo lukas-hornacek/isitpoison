@@ -9,10 +9,22 @@ canteen_router.get("/", async (_req, res) => {
 
 canteen_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_canteen(id)).rows[0]);
+
+    const result = await select_canteen(id);
+
+    if (result.rowCount === 0) {
+        res.status(404).send("Canteen not found.");
+    }
+    res.json(result.rows[0]);
 });
 
 canteen_router.get("/detail/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_canteen_detail(id)).rows[0]);
+
+    const result = await select_canteen_detail(id);
+
+    if (result.rowCount === 0) {
+        res.status(404).send("Canteen detail not found.");
+    }
+    res.json(result.rows[0]);
 });
