@@ -13,8 +13,8 @@ export function useGetReviewsByMeal(id: number) {
     };
 }
 
-export function useGetReviewsByUser(id: number) {
-    const { data, error, isLoading } = useSWR<Review[], Error>(`${url}/review/user/${id}`, fetcher);
+export function useGetReviewsByUser(id?: number) {
+    const { data, error, isLoading } = useSWR<Review[], Error>(id ? `${url}/review/user/${id}` : null, fetcher);
 
     return {
         reviews: data,

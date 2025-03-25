@@ -7,6 +7,7 @@ import ProfileView from "./ProfileView";
 
 import "../styles/global.css";
 import AuthenticationProvider from "../auth/AuthenticationProvider";
+import AdminView from "./AdminView";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<WeeklyView />} />
         <Route path="/meals" element={<MealsView />} />
         <Route path="/profile" element={<ProfileView />} />
+        <Route path="/admin" element={<AdminView />} />
       </Routes>
     </AuthenticationProvider>
   );
