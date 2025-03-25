@@ -6,16 +6,17 @@ import WeeklyView from "./WeeklyView";
 import ProfileView from "./ProfileView";
 
 import "../styles/global.css";
+import AuthenticationProvider from "../auth/AuthenticationProvider";
 
 export default function App() {
   return (
-    <>
+    <AuthenticationProvider>
       <NavBar />
       <Routes>
         <Route path="/" element={<WeeklyView />} />
         <Route path="/meals" element={<MealsView />} />
         <Route path="/profile" element={<ProfileView />} />
       </Routes>
-    </>
+    </AuthenticationProvider>
   );
 }
