@@ -1,8 +1,14 @@
 import express from "express";
-import { select_user } from "../queries/user_queries.js";
+import { select_user, select_users } from "../queries/user_queries.js";
 
 export const user_router = express.Router();
 
+// TODO admin only
+user_router.get("/", async (_req, res) => {
+    res.json((await select_users()).rows);
+});
+
+// TODO admin or logged in user only
 user_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
 
