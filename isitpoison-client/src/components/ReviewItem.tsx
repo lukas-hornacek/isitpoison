@@ -1,7 +1,7 @@
 import { Button, Col, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Review } from "../types";
 import { useGetUser } from "../data/user";
-import AverageRating from "./AverageRating";
+import RatingDisplay from "./RatingDisplay";
 import { Authentication, AuthenticationContext } from "../auth/AuthenticationContext";
 import { useContext } from "react";
 
@@ -22,7 +22,7 @@ export default function ReviewItem({ user_id, rating, text }: Review) {
                     <Button variant="danger">Odstrániť</Button> : null}
                 </Col>
             </Row>
-            <AverageRating rating={rating}/>
+            <RatingDisplay rating={rating} precision={0}/>
             <div>Text: {text}</div>
         </ListGroupItem>
     );

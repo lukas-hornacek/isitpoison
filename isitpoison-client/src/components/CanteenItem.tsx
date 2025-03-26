@@ -3,10 +3,10 @@ import Row from "react-bootstrap/Row";
 
 import { Canteen } from "../types";
 import { Weekday } from "../common";
-import MealItem from "./MealItem";
+import MealCard from "./MealCard";
 import { Button, Spinner } from "react-bootstrap";
 import { useState } from "react";
-import CanteenDetail from "./CanteenDetail";
+import CanteenModal from "./CanteenModal";
 import { useGetWeeklyMeals } from "../data/meal";
 
 export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, weekday: Weekday }) {
@@ -22,7 +22,7 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
     }
 
     const mealItems = meals.meals?.map(meal =>
-            <MealItem key={meal.id} meal={meal} />
+            <MealCard key={meal.id} meal={meal} />
     );
 
     return (
@@ -39,7 +39,7 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
                 </Row>
             </Container>
 
-            <CanteenDetail canteen={canteen} show={showDetail} handleClose={handleCloseDetail} />
+            <CanteenModal canteen={canteen} show={showDetail} handleClose={handleCloseDetail} />
         </>
     );
 }

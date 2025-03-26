@@ -1,31 +1,19 @@
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/Col";
-import { useState } from "react";
-
+import { ListGroupItem, Row, Col, Button } from "react-bootstrap";
 import { Meal } from "../types";
-import MealDetail from "./MealDetail";
-import AverageRating from "./AverageRating";
+import RatingDisplay from "./RatingDisplay";
 
 export default function MealItem({ meal }: { meal: Meal }) {
-    const [showDetail, setShowDetail] = useState(false);
-
-    const handleCloseDetail = () => setShowDetail(false);
-    const handleShowDetail = () => setShowDetail(true);
-
     return (
-        <>
-            <Col key={meal.id} lg={3} md={4} sm={6} xs={12} className="d-flex justify-content-center">
-                <Card style={{ width: "100%", maxWidth: "15em" }} className="shadow">
-                    <Card.Body>
-                        <Card.Title>{meal.name}</Card.Title>
-                        <Card.Subtitle><AverageRating rating={Number(meal.rating)} /></Card.Subtitle>
-                        <Button onClick={handleShowDetail}>Detail</Button>
-                    </Card.Body>
-                </Card>
+    <ListGroupItem key={meal.id} variant="dark">
+        <Row>
+            <Col>
+                <h4>{meal.name}</h4>
             </Col>
-
-            <MealDetail meal={meal} show={showDetail} handleClose={handleCloseDetail}/>
-        </>
+            <Col className="d-flex justify-content-end">
+                <Button variant="danger">Odstrániť</Button>
+            </Col>
+        </Row>
+        <RatingDisplay rating={Number(meal.rating)} precision={2} />
+    </ListGroupItem>
     );
 }

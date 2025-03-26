@@ -1,13 +1,13 @@
 import { Button, Col, Container, Modal, Row, Spinner, Stack } from "react-bootstrap";
 import { Meal } from "../types";
 import ReviewList from "./ReviewList";
-import AverageRating from "./AverageRating";
 import { useGetReviewsByMeal } from "../data/review";
 import { useContext, useState } from "react";
 import { Authentication, AuthenticationContext } from "../auth/AuthenticationContext";
 import PostReview from "./PostReview";
+import RatingDisplay from "./RatingDisplay";
 
-export default function MealDetail({ meal, show, handleClose }: { meal: Meal, show: boolean, handleClose: () => void }) {
+export default function MealModal({ meal, show, handleClose }: { meal: Meal, show: boolean, handleClose: () => void }) {
     const auth: Authentication = useContext(AuthenticationContext)!;
 
     const { reviews, isLoading } = useGetReviewsByMeal(meal.id);
@@ -24,7 +24,7 @@ export default function MealDetail({ meal, show, handleClose }: { meal: Meal, sh
                 <Stack>
                     <h2>{meal.name}</h2>
                     <Container className="d-flex justify-content-center">
-                        <AverageRating rating={Number(meal.rating)}/>
+                        <RatingDisplay rating={Number(meal.rating)} precision={2}/>
                     </Container>
                 </Stack>
             </Modal.Header>

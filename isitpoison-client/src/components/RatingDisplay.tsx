@@ -1,6 +1,6 @@
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 
-export default function AverageRating({ rating }: { rating: number }) {
+export default function RatingDisplay({ rating, precision }: { rating: number, precision: number }) {
     const stars = [];
 
     for (let i = 0; i < 10; i+=2) {
@@ -14,6 +14,6 @@ export default function AverageRating({ rating }: { rating: number }) {
     }
 
     return (
-        <>{stars} {(rating / 2).toFixed(2)}</>
+        <>{stars} {(rating / 2).toFixed(precision)}</>
     );
 }

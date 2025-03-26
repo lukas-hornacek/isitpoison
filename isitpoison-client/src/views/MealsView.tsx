@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import MealItem from "../components/MealItem";
+import MealCard from "../components/MealCard";
 import FilterBar from "../components/FilterBar";
 import { useGetMeals } from "../data/meal";
 import { Spinner } from "react-bootstrap";
@@ -18,7 +18,7 @@ export default function MealsView() {
     }
 
     const mealItems = meals!.map(meal =>
-        <MealItem key={meal.id} meal={meal} />
+        <MealCard key={meal.id} meal={meal} />
     );
     
     return (
