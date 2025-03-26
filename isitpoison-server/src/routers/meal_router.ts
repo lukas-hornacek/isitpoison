@@ -32,7 +32,7 @@ meal_router.get("/", async (req, res) => {
     }
     const order = ordering(req.query["ordering"]?.toString() ?? "") ?? Ordering.Alphabetical;
     const ascending = req.query["descending"] !== undefined;
-    const substring = req.query["substring"]?.toString().toLowerCase() ?? "";
+    const search = req.query["search"]?.toString().toLowerCase();
 
-    res.json((await select_meals(canteen_ids, order, ascending, substring)).rows);
+    res.json((await select_meals(canteen_ids, order, ascending, search)).rows);
 });

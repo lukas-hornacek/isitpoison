@@ -3,8 +3,8 @@ import useSWR from "swr";
 import { fetcher } from "./fetcher";
 import { Review } from "../types";
 
-export function useGetReviews() {
-    const { data, error, isLoading } = useSWR<Review[], Error>("/api/review", fetcher);
+export function useGetReviews(search?: string) {
+    const { data, error, isLoading } = useSWR<Review[], Error>(`/api/review${search ? `?search=${search}` : ""}`, fetcher);
 
     return {
         reviews: data,

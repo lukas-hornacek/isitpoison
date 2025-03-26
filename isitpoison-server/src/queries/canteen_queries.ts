@@ -1,8 +1,17 @@
 import { database } from "../model/database_connection.js";
 
-export async function select_canteens() {
+export async function select_canteens(search?: string) {
+    let text = "SELECT * FROM canteens";
+    const values = [];
+
+    if (search) {
+        text += "\nWHERE LOWER(name) LIKE '%' || $1 || '%'";
+        values.push(search);
+    }
+
     const query = {
-        text: "SELECT * FROM canteens"
+        text: text,
+        values: values,
     };
     return await database.query(query);
 }

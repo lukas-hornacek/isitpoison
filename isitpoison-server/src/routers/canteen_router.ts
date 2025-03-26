@@ -3,8 +3,10 @@ import { select_canteen, select_canteen_detail, select_canteens } from "../queri
 
 export const canteen_router = express.Router();
 
-canteen_router.get("/", async (_req, res) => {
-    res.json((await select_canteens()).rows);
+canteen_router.get("/", async (req, res) => {
+    const search = req.query["search"]?.toString().toLowerCase();
+
+    res.json((await select_canteens(search)).rows);
 });
 
 canteen_router.get("/:id(\\d+)", async (req, res) => {

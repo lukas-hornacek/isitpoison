@@ -3,8 +3,8 @@ import useSWR from "swr";
 import { fetcher } from "./fetcher";
 import { User } from "../types";
 
-export function useGetUsers() {
-    const { data, error, isLoading } = useSWR<User[], Error>("/api/user", fetcher);
+export function useGetUsers(search?: string) {
+    const { data, error, isLoading } = useSWR<User[], Error>(`/api/user${search ? `?search=${search}` : ""}`, fetcher);
 
     return {
         users: data,

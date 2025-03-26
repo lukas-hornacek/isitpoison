@@ -24,7 +24,7 @@ export function useGetWeeklyMeals(canteen_id: number, weekday: Weekday) {
     };
 }
 
-export function useGetMeals(canteen_ids?: number[], ordering?: Ordering, substring?: string) {
+export function useGetMeals(canteen_ids?: number[], ordering?: Ordering, search?: string) {
     const args: string[] = [];
 
     if (canteen_ids !== undefined) {
@@ -33,8 +33,8 @@ export function useGetMeals(canteen_ids?: number[], ordering?: Ordering, substri
     if (ordering !== undefined) {
         args.push("ordering=" + ordering);
     }
-    if (substring !== undefined) {
-        args.push("substring=" + substring);
+    if (search !== undefined) {
+        args.push("search=" + search);
     }
 
     const { data, error, isLoading } = useSWR<Meal[], Error>(

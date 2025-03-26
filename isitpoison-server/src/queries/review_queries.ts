@@ -1,8 +1,19 @@
 import { database } from "../model/database_connection.js";
 
-export async function select_reviews() {
+export async function select_reviews(search?: string) {
+    let text = "SELECT * FROM reviews";
+    const values = [];
+
+    if (search) {
+        text += "\nWHERE LOWER(text) LIKE '%' || $1 || '%'";
+        values.push(search);
+    }
+
+    text += "\nORDER BY uploaded DESC";
+
     const query = {
-        text: "SELECT * FROM reviews ORDER BY uploaded DESC",
+        text: text,
+        values: values,
     };
     return await database.query(query);
 }

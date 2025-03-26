@@ -4,8 +4,10 @@ import { select_review_by_meal, select_review_by_user, select_reviews } from "..
 export const review_router = express.Router();
 
 // TODO admin only
-review_router.get("/", async (_req, res) => {
-    res.json((await select_reviews()).rows);
+review_router.get("/", async (req, res) => {
+    const search = req.query["search"]?.toString().toLowerCase();
+
+    res.json((await select_reviews(search)).rows);
 });
 
 review_router.get("/meal/:id(\\d+)", async (req, res) => {

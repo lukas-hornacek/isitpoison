@@ -23,7 +23,7 @@ export async function select_weekly_meals(canteen_id: number, weekday: number) {
     return await database.query(query);
 }
 
-export async function select_meals(canteen_ids: number[], ordering: Ordering, ascending: boolean, substring: string) {  
+export async function select_meals(canteen_ids: number[], ordering: Ordering, ascending: boolean, search?: string) {  
     let text = `SELECT meals.id, name, canteen_id, last_served, meals.uploaded, AVG(reviews.rating) AS rating
     FROM meals, reviews
     WHERE meals.id=reviews.meal_id`;
@@ -33,9 +33,9 @@ export async function select_meals(canteen_ids: number[], ordering: Ordering, as
         text += " AND canteen_id IN (" + canteen_ids.join(", ") + ")";
     }
 
-    if (substring !== "") {
+    if (search) {
         text += " AND LOWER(name) LIKE '%' || $1 || '%'";
-        values.push(substring);
+        values.push(search);
     }
 
     text += `
