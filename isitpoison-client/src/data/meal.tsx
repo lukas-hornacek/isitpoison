@@ -1,11 +1,11 @@
 import useSWR from "swr";
 
-import { url, fetcher } from "./fetcher";
+import { fetcher } from "./fetcher";
 import { Meal } from "../types";
 import { Ordering, Weekday } from "../common";
 
 export function useGetMeal(id: number) {
-    const { data, error, isLoading } = useSWR<Meal, Error>(`${url}/meal/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR<Meal, Error>(`/api/meal/${id}`, fetcher);
 
     return {
         meal: data,
@@ -15,7 +15,7 @@ export function useGetMeal(id: number) {
 }
 
 export function useGetWeeklyMeals(canteen_id: number, weekday: Weekday) {
-    const { data, error, isLoading } = useSWR<Meal[], Error>(`${url}/meal/${canteen_id}/${weekday}`, fetcher);
+    const { data, error, isLoading } = useSWR<Meal[], Error>(`/api/meal/${canteen_id}/${weekday}`, fetcher);
 
     return {
         meals: data,
@@ -38,7 +38,7 @@ export function useGetMeals(canteen_ids?: number[], ordering?: Ordering, substri
     }
 
     const { data, error, isLoading } = useSWR<Meal[], Error>(
-        `${url}/meal${args.length === 0 ? "" : "?" + args.join("&")}`, fetcher);
+        `/api/meal${args.length === 0 ? "" : "?" + args.join("&")}`, fetcher);
 
     return {
         meals: data,
