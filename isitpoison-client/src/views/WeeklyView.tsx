@@ -2,8 +2,8 @@ import Container from "react-bootstrap/Container";
 import Stack from "react-bootstrap/Stack";
 import { useState } from "react";
 
-import CanteenItem from "./CanteenItem";
-import WeekdayButtons from "./WeekdayButtons";
+import CanteenItem from "../components/CanteenItem";
+import WeekdayButtons from "../components/WeekdayButtons";
 import { today } from "../common";
 import { useGetCanteens } from "../data/canteen";
 import { Spinner } from "react-bootstrap";

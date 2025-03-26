@@ -1,21 +1,15 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import MealItem from "./MealItem";
-import FilterBar from "./FilterBar";
+import MealItem from "../components/MealItem";
+import FilterBar from "../components/FilterBar";
 import { useGetMeals } from "../data/meal";
 import { Spinner } from "react-bootstrap";
 import { useState } from "react";
-import { Ordering } from "../common";
-
-export interface Filters {
-    canteen_ids?: number[],
-    ordering?: Ordering,
-    substring?: string,
-}
+import { MealFilters } from "../common";
 
 export default function MealsView() {
-    const [filters, setFilters] = useState<Filters>({});    
+    const [filters, setFilters] = useState<MealFilters>({});    
 
     const { meals, isLoading } = useGetMeals(filters.canteen_ids, filters.ordering, filters.substring);
 
@@ -29,7 +23,7 @@ export default function MealsView() {
     
     return (
         <>
-            <h2>Všetky jedlá</h2>
+            <h2>Jedlá</h2>
             <FilterBar filters={filters} setFilters={setFilters} />
             <Container>
                 <Row className="g-4">

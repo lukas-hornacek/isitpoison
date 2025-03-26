@@ -7,7 +7,7 @@ export function useGetUsers() {
     const { data, error, isLoading } = useSWR<User[], Error>("/api/user", fetcher);
 
     return {
-        user: data,
+        users: data,
         isLoading: isLoading,
         error: error,
     };

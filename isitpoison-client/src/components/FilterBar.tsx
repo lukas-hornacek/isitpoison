@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Button, ButtonToolbar, Dropdown, Form, InputGroup, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { useGetCanteens } from "../data/canteen";
-import { Filters } from "./MealsView";
-import { Ordering, orderingToString } from "../common";
+import { Ordering, orderingToString, MealFilters } from "../common";
 
-export default function FilterBar({ filters, setFilters }: { filters: Filters, setFilters: React.Dispatch<React.SetStateAction<Filters>>}) {
+export default function FilterBar({ filters, setFilters }: { filters: MealFilters, setFilters: React.Dispatch<React.SetStateAction<MealFilters>>}) {
     const { canteens, isLoading } = useGetCanteens();
     
     const [selectedCanteens, setSelectedCanteens] = useState(filters.canteen_ids ?? canteens?.map(c => c.id));

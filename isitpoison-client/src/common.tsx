@@ -47,3 +47,9 @@ export function orderingToString(ordering: Ordering): string {
             return "Naposledy servírované";
     }
 }
+
+export interface MealFilters {
+    canteen_ids?: number[],
+    ordering?: Ordering,
+    substring?: string,
+}

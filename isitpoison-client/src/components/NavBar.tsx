@@ -8,17 +8,34 @@ import { Authentication, AuthenticationContext } from "../auth/AuthenticationCon
 export default function NavBar() {
     const auth: Authentication = useContext(AuthenticationContext)!;
 
-    return (
-        <Navbar expand="lg" className="bg-body-secondary">
-            <Container>
-                <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
-                <NavLink to="/" end>Aktuálna ponuka</NavLink>
-                <NavLink to="/meals">Všetky jedlá</NavLink>
-                {auth.isAdmin ? <NavLink to="/admin">Administrácia</NavLink> : <NavLink to="/profile">Profil</NavLink>}
-                <Button onClick={() => auth.isLoggedIn ? auth.logout() : auth.login()}>
-                    {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
-                </Button>
-            </Container>
-        </Navbar>
-    );
+    if (auth.isAdmin) {
+        return (
+            <Navbar expand="lg" className="bg-body-secondary">
+                <Container>
+                    <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
+                    <NavLink to="/admin/meals">Jedlá</NavLink>
+                    <NavLink to="/admin/canteens">Jedálne</NavLink>
+                    <NavLink to="/admin/users">Používatelia</NavLink>
+                    <NavLink to="/admin/reviews">Recenzie</NavLink>
+                    <Button onClick={() => auth.isLoggedIn ? auth.logout() : auth.login()}>
+                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                    </Button>
+                </Container>
+            </Navbar>
+        );
+    } else {
+        return (
+            <Navbar expand="lg" className="bg-body-secondary">
+                <Container>
+                    <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
+                    <NavLink to="/" end>Aktuálna ponuka</NavLink>
+                    <NavLink to="/meals">Jedlá</NavLink>
+                    <NavLink to="/profile">Profil</NavLink>
+                    <Button onClick={() => auth.isLoggedIn ? auth.logout() : auth.login()}>
+                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                    </Button>
+                </Container>
+            </Navbar>
+        );
+    }
 }
