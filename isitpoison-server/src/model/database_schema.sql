@@ -52,6 +52,6 @@ CREATE TABLE reviews (
     meal_id int references meals(id) not null,
     user_id int references users(id) not null,
     uploaded date not null CHECK (uploaded <= CURRENT_DATE),
-    rating int CHECK (rating >= 0) CHECK (rating <= 10),
+    rating int CHECK (rating >= 1) CHECK (rating <= 5),
     text text
 );
