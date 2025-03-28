@@ -8,7 +8,7 @@ export default function PostReview({ setIsPostingReview }: { setIsPostingReview:
     return (
         <Form>
             <Form.Group>
-                <Form.Label>Rating</Form.Label>
+                <Form.Label>Hodnotenie</Form.Label>
                 <RatingInput selected={selected} setSelected={setSelected}/>
             </Form.Group>
             <Form.Group>

@@ -22,7 +22,7 @@ export default function AdminUsersView() {
         return <Spinner />;
     }
 
-    const userItems = users?.map(user => <AdminUserItem user={user}/>);
+    const userItems = users?.map(user => <AdminUserItem key={user.id} user={user}/>);
 
     return (
         <Container>
