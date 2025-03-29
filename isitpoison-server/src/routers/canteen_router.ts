@@ -1,5 +1,5 @@
 import express from "express";
-import { delete_canteen, insert_canteen, put_canteen, select_canteen, select_canteen_detail, select_canteens } from "../queries/canteen_queries.js";
+import { delete_canteen, insert_canteen, select_canteen, select_canteen_detail, select_canteens, update_canteen } from "../queries/canteen_queries.js";
 
 const hours = [
     "monday_open", "monday_close", "tuesday_open", "tuesday_close",
@@ -65,20 +65,20 @@ canteen_router.post("/", async (req, res) => {
     const canteen = req.body;
 
     if (typeof canteen["name"] !== "string") {
-        res.status(400).send("field 'name' is missing");
+        res.status(400).send("field 'name' of type string is required");
         return;
     }
     if (typeof canteen["location"] !== "string") {
-        res.status(400).send("field 'location' is missing");
+        res.status(400).send("field 'location' of type string is required");
         return;
     }
     for (const hour of hours) {
         if (typeof canteen[hour] !== "string") {
-            res.status(400).send(`field '${hour}' is missing`);
+            res.status(400).send(`field '${hour}' of type string in HH:MM format is required`);
             return;
         }
         if (!/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour])) {
-            res.status(400).send(`invalid time format in field '${hour}'`);
+            res.status(400).send(`field '${hour}' must be in HH:MM format`);
             return;
         }
     }
@@ -97,7 +97,7 @@ canteen_router.post("/", async (req, res) => {
                 res.status(400).send(e.message);
             }
         } else {
-            res.status(500).send("unknown error.");
+            res.status(500).send("unknown error");
         }
     }
 });
@@ -108,26 +108,26 @@ canteen_router.put("/:id(\\d+)", async (req, res) => {
     const canteen = req.body;
 
     if (typeof canteen["name"] !== "string") {
-        res.status(400).send("field 'name' is missing");
+        res.status(400).send("field 'name' of type string is required");
         return;
     }
     if (typeof canteen["location"] !== "string") {
-        res.status(400).send("field 'location' is missing");
+        res.status(400).send("field 'location' of type string is required");
         return;
     }
     for (const hour of hours) {
         if (typeof canteen[hour] !== "string") {
-            res.status(400).send(`field '${hour}' is missing`);
+            res.status(400).send(`field '${hour}' of type string in HH:MM format is required`);
             return;
         }
         if (!/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour])) {
-            res.status(400).send(`invalid time format in field '${hour}'`);
+            res.status(400).send(`field '${hour}' must be in HH:MM format'`);
             return;
         }
     }
 
     try {
-        const result = await put_canteen(id, canteen["name"], canteen["location"], canteen["monday_open"], canteen["monday_close"],
+        const result = await update_canteen(id, canteen["name"], canteen["location"], canteen["monday_open"], canteen["monday_close"],
             canteen["tuesday_open"], canteen["tuesday_close"], canteen["wednesday_open"], canteen["wednesday_close"],
             canteen["thursday_open"], canteen["thursday_close"], canteen["friday_open"], canteen["friday_close"],
             canteen["saturday_open"], canteen["saturday_close"], canteen["sunday_open"], canteen["sunday_close"]);
@@ -140,7 +140,7 @@ canteen_router.put("/:id(\\d+)", async (req, res) => {
         if (e instanceof Error) {
             res.status(400).send(e.message);
         } else {
-            res.status(500).send("unknown error.");
+            res.status(500).send("unknown error");
         }
     }
 });
