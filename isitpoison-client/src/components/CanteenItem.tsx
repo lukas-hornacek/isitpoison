@@ -2,7 +2,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
 import { Canteen } from "../types";
-import { Weekday } from "../common";
+import { hoursToString, Weekday } from "../common";
 import MealCard from "./MealCard";
 import { Button, Spinner } from "react-bootstrap";
 import { useState } from "react";
@@ -25,6 +25,31 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
             <MealCard key={meal.id} meal={meal} />
     );
 
+    let hours: string;
+    switch (weekday) {
+        case Weekday.Monday:
+            hours = hoursToString(canteen.monday_open, canteen.monday_close);
+            break;
+        case Weekday.Tuesday:
+            hours = hoursToString(canteen.tuesday_open, canteen.tuesday_close);
+            break;
+        case Weekday.Wednesday:
+            hours = hoursToString(canteen.wednesday_open, canteen.wednesday_close);
+            break;
+        case Weekday.Thursday:
+            hours = hoursToString(canteen.thursday_open, canteen.thursday_close);
+            break;
+        case Weekday.Friday:
+            hours = hoursToString(canteen.friday_open, canteen.friday_close);
+            break;
+        case Weekday.Saturday:
+            hours = hoursToString(canteen.saturday_open, canteen.saturday_close);
+            break;
+        case Weekday.Sunday:
+            hours = hoursToString(canteen.sunday_open, canteen.sunday_close);
+            break;
+    }
+
     return (
         <>
             <h2>{canteen.name}
@@ -32,6 +57,7 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
                     Detail
                 </Button>
             </h2>
+            <div className="d-flex justify-content-center">{hours}</div>
 
             <Container>
                 <Row className="g-4">

@@ -1,5 +1,5 @@
 import express from "express";
-import { delete_canteen, insert_canteen, select_canteen, select_canteen_detail, select_canteens, update_canteen } from "../queries/canteen_queries.js";
+import { delete_canteen, insert_canteen, select_canteen, select_canteens, update_canteen } from "../queries/canteen_queries.js";
 
 const hours = [
     "monday_open", "monday_close", "tuesday_open", "tuesday_close",
@@ -23,18 +23,6 @@ canteen_router.get("/:id(\\d+)", async (req, res) => {
 
     if (result.rowCount === 0) {
         res.status(404).send("canteen not found.");
-    } else {
-        res.json(result.rows[0]);
-    }
-});
-
-canteen_router.get("/detail/:id(\\d+)", async (req, res) => {
-    const id = Number(req.params["id"]);
-
-    const result = await select_canteen_detail(id);
-
-    if (result.rowCount === 0) {
-        res.status(404).send("canteen detail not found.");
     } else {
         res.json(result.rows[0]);
     }

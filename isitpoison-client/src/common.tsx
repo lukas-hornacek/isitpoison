@@ -31,6 +31,10 @@ export function today(): Weekday {
     return new Date().getDay();
 }
 
+export function hoursToString(open?: string, close?: string) {
+    return open ? `${open.substring(0, 5)} - ${close?.substring(0, 5)}` : "Zatvorené";
+};
+
 export enum Ordering {
     Alphabetical = "name",
     Rating = "rating",

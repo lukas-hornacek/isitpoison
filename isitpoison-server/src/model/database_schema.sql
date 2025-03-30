@@ -1,13 +1,9 @@
-DROP TABLE IF EXISTS reviews, users, weekly_meals, meals, opening_hours, canteens;
-
-CREATE TABLE canteens (
-    id serial primary key,
-    name text unique not null
-);
+DROP TABLE IF EXISTS reviews, users, weekly_meals, meals, canteens;
 
 -- if X_open is NULL, canteen is not open for day X
-CREATE TABLE canteen_details (
-    canteen_id int unique references canteens(id),
+CREATE TABLE canteens (
+    id serial primary key,
+    name text unique not null,
     location text not null,
     monday_open     time,
     monday_close    time,
@@ -30,7 +26,8 @@ CREATE TABLE meals (
     name text not null,
     canteen_id int references canteens(id) not null,
     last_served date CHECK (last_served <= CURRENT_DATE),
-    uploaded date not null CHECK (uploaded <= CURRENT_DATE)
+    uploaded date not null CHECK (uploaded <= CURRENT_DATE),
+    UNIQUE (name, canteen_id)
 );
 
 -- updates at the beginning of a week

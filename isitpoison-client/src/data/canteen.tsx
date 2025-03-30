@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 import { fetcher } from "./fetcher";
-import { Canteen, CanteenDetail } from "../types";
+import { Canteen } from "../types";
 
 export function useGetCanteens(search?: string) {
     const { data, error, isLoading } = useSWR<Canteen[], Error>(`/api/canteen${search ? `?search=${search}` : ""}`, fetcher);
@@ -18,16 +18,6 @@ export function useGetCanteen(id: number) {
 
     return {
         canteen: data,
-        isLoading: isLoading,
-        error: error,
-    };
-}
-
-export function useGetCanteenDetail(id: number) {
-    const { data, error, isLoading } = useSWR<CanteenDetail, Error>(`/api/canteen/detail/${id}`, fetcher);
-
-    return {
-        canteenDetail: data,
         isLoading: isLoading,
         error: error,
     };

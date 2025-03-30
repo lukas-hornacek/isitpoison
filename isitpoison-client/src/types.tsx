@@ -1,10 +1,6 @@
 export interface Canteen {
     id: number,
     name: string,
-}
-
-export interface CanteenDetail {
-    canteen_id: number,
     location: string,
     monday_open?: string,
     monday_close?: string,

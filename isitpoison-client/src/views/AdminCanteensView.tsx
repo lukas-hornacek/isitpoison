@@ -3,7 +3,7 @@ import { AuthenticationContext } from "../auth/AuthenticationContext";
 import { useGetCanteens } from "../data/canteen";
 import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Canteen } from "../types";
-import CanteenDetail from "../components/CanteenDetail";
+import CanteenInformation from "../components/CanteenInformation";
 import { Weekday, weekdayToString } from "../common";
 
 export default function AdminCanteensView() {
@@ -61,7 +61,7 @@ function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
                     <Button variant="danger">Odstrániť</Button>
                 </Col>
             </Row>
-            <CanteenDetail id={canteen.id} />
+            <CanteenInformation canteen={canteen} />
         </ListGroupItem>
     );
 }

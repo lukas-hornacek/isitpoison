@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
 import { Canteen } from "../types";
-import CanteenInformation from "./CanteenDetail";
+import CanteenInformation from "./CanteenInformation";
 
 export default function CanteenModal({ canteen, show, handleClose }: { canteen: Canteen, show: boolean, handleClose: () => void }) {
     return (
@@ -9,7 +9,7 @@ export default function CanteenModal({ canteen, show, handleClose }: { canteen: 
                 <h2>{canteen.name}</h2>
             </Modal.Header>
             <Modal.Body>
-                <CanteenInformation id={canteen.id} />
+                <CanteenInformation canteen={canteen} />
             </Modal.Body>
         </Modal> 
     );
