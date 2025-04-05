@@ -33,11 +33,13 @@ export async function select_meals(canteen_ids: number[], ordering: Ordering, as
     const values = [];
 
     if (canteen_ids.length !== 0) {
-        text += " AND canteen_id IN (" + canteen_ids.join(", ") + ")";
-    }
-
-    if (search) {
-        text += " AND LOWER(name) LIKE '%' || $1 || '%'";
+        text += "\nWHERE canteen_id IN (" + canteen_ids.join(", ") + ")";
+        if (search) {
+            text += " AND LOWER(name) LIKE '%' || $1 || '%'";
+            values.push(search);
+        }
+    } else if (search) {
+        text += "\nWHERE LOWER(name) LIKE '%' || $1 || '%'";
         values.push(search);
     }
 
@@ -49,7 +51,6 @@ export async function select_meals(canteen_ids: number[], ordering: Ordering, as
         text: text,
         values: values,
     };
-
     return await database.query(query);
 }
 

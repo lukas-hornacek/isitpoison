@@ -7,7 +7,7 @@ export async function select_users(search?: string) {
     const values = [];
 
     if (search) {
-        text += " AND LOWER(username) LIKE '%' || $1 || '%'";
+        text += "\nWHERE LOWER(username) LIKE '%' || $1 || '%'";
         values.push(search);
     }
 
@@ -15,7 +15,7 @@ export async function select_users(search?: string) {
 
     const query = {
         text: text,
-        values: values
+        values: values,
     };
     return await database.query(query);
 }
