@@ -6,6 +6,10 @@ import { insert_user, select_user_by_name } from "../queries/user_queries.js";
 export const auth_router = express.Router();
 
 auth_router.post("/login", async (req, res) => {
+    if (req.session && req.session.userId) {
+        res.status(401).send("Session already exists.");
+        return;
+    }
     if (typeof req.body["username"] !== "string") {
         res.status(400).send("field 'username' of type string is required");
         return;

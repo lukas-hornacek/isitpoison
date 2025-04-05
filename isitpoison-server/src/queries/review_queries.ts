@@ -34,10 +34,10 @@ export async function select_review_by_user(id: number) {
     return await database.query(query);
 }
 
-export async function delete_review(id: number) {
+export async function delete_review(id: number, user_id: number) {
     const query = {
-        text: "DELETE FROM reviews WHERE id=$1",
-        values: [id],
+        text: "DELETE FROM reviews WHERE id=$1 AND user_id=$2",
+        values: [id, user_id],
     };
     return await database.query(query);
 }

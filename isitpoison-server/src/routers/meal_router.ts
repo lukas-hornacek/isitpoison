@@ -37,54 +37,61 @@ meal_router.get("/", async (req, res) => {
     res.json((await select_meals(canteen_ids, order, ascending, search)).rows);
 });
 
-// TODO admin only
 meal_router.delete("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
     
-    try {
-        const result = await delete_meal(id);
-        if (result.rowCount === 0) {
-            res.status(400).send("meals does not exist");
-        } else {
-            res.send();
+    if (req.session && req.session.userId && req.session.isAdmin) {
+        try {
+            const result = await delete_meal(id);
+            if (result.rowCount === 0) {
+                res.status(400).send("meals does not exist");
+            } else {
+                res.send();
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                res.status(400).send(e.message);
+            } else {
+                res.status(500).send("unknown error");
+            }
         }
-    } catch (e: unknown) {
-        if (e instanceof Error) {
-            res.status(400).send(e.message);
-        } else {
-            res.status(500).send("unknown error");
-        }
+    } else {
+        res.status(401).send();
     }
+    
 });
 
-// TODO admin only
 meal_router.post("/", async (req, res) => {
     const meal = req.body;
 
-    if (typeof meal["name"] !== "string") {
-        res.status(400).send("field 'name' of type string is required");
-        return;
-    }
-    if (typeof meal["canteen_id"] !== "number") {
-        res.status(400).send("field 'canteen_id' of type number is required");
-        return;
-    }
-
-    try {
-        await insert_meal(meal["name"], meal["canteen_id"]);
-        res.send();
-    } catch (e: unknown) {
-        if (e instanceof Error) {
-            if (e.message.includes("duplicate key")) {
-                res.status(400).send("meal already exists");
-            } else if (e.message.includes("meals_canteen_id_fkey")) {
-                res.status(400).send(`canteen with ID ${meal["canteen_id"]} does not exist`);
-            } else {
-                res.status(400).send(e.message);
-            }
-        } else {
-            res.status(500).send("unknown error");
+    if (req.session && req.session.userId && req.session.isAdmin) {
+        if (typeof meal["name"] !== "string") {
+            res.status(400).send("field 'name' of type string is required");
+            return;
         }
+        if (typeof meal["canteen_id"] !== "number") {
+            res.status(400).send("field 'canteen_id' of type number is required");
+            return;
+        }
+
+        try {
+            await insert_meal(meal["name"], meal["canteen_id"]);
+            res.send();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                if (e.message.includes("duplicate key")) {
+                    res.status(400).send("meal already exists");
+                } else if (e.message.includes("meals_canteen_id_fkey")) {
+                    res.status(400).send(`canteen with ID ${meal["canteen_id"]} does not exist`);
+                } else {
+                    res.status(400).send(e.message);
+                }
+            } else {
+                res.status(500).send("unknown error");
+            }
+        }
+    } else {
+        res.status(401).send();
     }
 });
 
@@ -93,31 +100,35 @@ meal_router.put("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
     const meal = req.body;
 
-    if (typeof meal["name"] !== "string") {
-        res.status(400).send("field 'name' of type string is required");
-        return;
-    }
-    if (typeof meal["canteen_id"] !== "number") {
-        res.status(400).send("field 'canteen_id' of type number is required");
-        return;
-    }
-
-    try {
-        const result = await update_meal(id, meal["name"], meal["canteen_id"]);
-        if (result.rowCount === 0) {
-            res.status(400).send("meal does not exist");
-        } else {
-            res.send();
+    if (req.session && req.session.userId && req.session.isAdmin) {
+        if (typeof meal["name"] !== "string") {
+            res.status(400).send("field 'name' of type string is required");
+            return;
         }
-    } catch (e: unknown) {
-        if (e instanceof Error) {
-            if (e.message.includes("meals_canteen_id_fkey")) {
-                res.status(400).send(`canteen with ID ${meal["canteen_id"]} does not exist`);
+        if (typeof meal["canteen_id"] !== "number") {
+            res.status(400).send("field 'canteen_id' of type number is required");
+            return;
+        }
+    
+        try {
+            const result = await update_meal(id, meal["name"], meal["canteen_id"]);
+            if (result.rowCount === 0) {
+                res.status(400).send("meal does not exist");
             } else {
-                res.status(400).send(e.message);
+                res.send();
             }
-        } else {
-            res.status(500).send("unknown error");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                if (e.message.includes("meals_canteen_id_fkey")) {
+                    res.status(400).send(`canteen with ID ${meal["canteen_id"]} does not exist`);
+                } else {
+                    res.status(400).send(e.message);
+                }
+            } else {
+                res.status(500).send("unknown error");
+            }
         }
+    } else {
+        res.status(401).send();
     }
 });
