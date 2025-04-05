@@ -1,5 +1,5 @@
 import express from "express";
-import { select_user, select_users } from "../queries/user_queries.js";
+import { select_user_by_id, select_users } from "../queries/user_queries.js";
 
 export const user_router = express.Router();
 
@@ -14,7 +14,7 @@ user_router.get("/", async (req, res) => {
 user_router.get("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
 
-    const result = await select_user(id);
+    const result = await select_user_by_id(id);
 
     if (result.rowCount === 0) {
         res.status(404).send("User not found.");

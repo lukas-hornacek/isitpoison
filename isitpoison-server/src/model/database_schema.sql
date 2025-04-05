@@ -52,3 +52,9 @@ CREATE TABLE reviews (
     rating int CHECK (rating >= 1) CHECK (rating <= 5),
     text text
 );
+
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL PRIMARY KEY,
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL
+);
