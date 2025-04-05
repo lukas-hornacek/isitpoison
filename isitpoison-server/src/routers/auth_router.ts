@@ -23,6 +23,7 @@ auth_router.post("/login", async (req, res) => {
     
     const id = result.rows[0]["id"];
     const hash = result.rows[0]["password"];
+    const isAdmin = result.rows[0]["is_admin"];
 
     const match = await bcrypt.compare(req.body["password"], hash);
     if (!match) {
@@ -31,7 +32,8 @@ auth_router.post("/login", async (req, res) => {
     }
 
     req.session.userId = id;
-    res.status(200).send("Login successful");
+    req.session.isAdmin = isAdmin;
+    res.status(200).json({ userId: id, isAdmin: isAdmin});
 });
 
 auth_router.delete("/logout", async (req, res) => {
@@ -47,6 +49,14 @@ auth_router.delete("/logout", async (req, res) => {
         });
     } else {
         res.status(400).send("Session does not exist.");
+    }
+});
+
+auth_router.get("/status", async (req, res) => {
+    if (req.session && req.session.userId) {
+        res.status(200).json({ userId: req.session.userId, isAdmin: req.session.isAdmin });
+    } else {
+        res.status(401).send("Session does not exist.");
     }
 });
 

@@ -11,6 +11,7 @@ import AdminCanteensView from "./AdminCanteensView";
 import AdminUsersView from "./AdminUsersView";
 import AdminReviewsView from "./AdminReviewsView";
 import AdminMealsView from "./AdminMealsView";
+import LoginView from "./LoginView";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/admin/canteens" element={<AdminCanteensView />} />
         <Route path="/admin/users"  element={<AdminUsersView />} />
         <Route path="/admin/reviews" element={<AdminReviewsView />} />
+        <Route path="/login" element={<LoginView />} />
       </Routes>
     </AuthenticationProvider>
   );

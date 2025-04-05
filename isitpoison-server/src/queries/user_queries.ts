@@ -1,9 +1,9 @@
 import { database } from "../model/database_connection.js";
 
 export async function select_users(search?: string) {
-    let text = `SELECT users.id, username, joined, COUNT(reviews.id) AS reviews, is_admin
-        FROM users, reviews
-        WHERE users.id=user_id`;
+    let text = `SELECT users.id, username, joined, COALESCE(COUNT(reviews.id), 0) AS reviews, is_admin
+        FROM users
+        LEFT OUTER JOIN reviews ON user_id=users.id`;
     const values = [];
 
     if (search) {
@@ -22,9 +22,10 @@ export async function select_users(search?: string) {
 
 export async function select_user_by_id(id: number) {
     const query = {
-        text: `SELECT users.id, username, joined, COUNT(reviews.id) AS reviews, is_admin
-        FROM users, reviews
-        WHERE users.id=$1 AND users.id=user_id
+        text: `SELECT users.id, username, joined, COALESCE(COUNT(reviews.id), 0) AS reviews, is_admin
+        FROM users
+        LEFT OUTER JOIN reviews ON users.id=user_id 
+        WHERE users.id=$1
         GROUP BY users.id, username, joined, is_admin`,
         values: [id],
     };
@@ -33,7 +34,7 @@ export async function select_user_by_id(id: number) {
 
 export async function select_user_by_name(username: string) {
     const query = {
-        text: "SELECT id, password FROM users WHERE username=$1",
+        text: "SELECT id, password, is_admin FROM users WHERE username=$1",
         values: [username],
     };
     return await database.query(query);
