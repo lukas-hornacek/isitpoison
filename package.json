@@ -14,6 +14,6 @@
   "author": "lukas-hornacek",
   "type": "module",
   "scripts": {
-    "start": "npm run --prefix isitpoison-client build & npm run --prefix isitpoison-server start"
+    "start": "npm run --prefix isitpoison-client build && npm run --prefix isitpoison-server start"
   }
 }
