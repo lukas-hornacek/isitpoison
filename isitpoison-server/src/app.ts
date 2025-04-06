@@ -2,7 +2,6 @@ import "dotenv/config";
 
 import express, { Request, Response, NextFunction } from "express";
 import cron from "node-cron";
-import path from "path";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import pgSimple from "connect-pg-simple";
@@ -60,8 +59,6 @@ app.use((err: unknown, _req: Request, res: Response, next: NextFunction): void =
     }
     next(err);
 });
-
-app.use(express.static(path.join(import.meta.dirname, "..", "..", "isitpoison-client", "dist")));
 
 app.use("/api/canteen", canteen_router);
 app.use("/api/meal", meal_router);

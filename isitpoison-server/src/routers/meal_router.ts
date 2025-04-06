@@ -95,7 +95,6 @@ meal_router.post("/", async (req, res) => {
     }
 });
 
-// TODO admin only
 meal_router.put("/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
     const meal = req.body;

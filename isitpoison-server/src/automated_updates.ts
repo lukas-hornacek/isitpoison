@@ -13,10 +13,14 @@ enum Canteens {
 export async function updateLastServed() {
     try {
         const select =  {
-            text: "SELECT meals.id FROM meals, weekly_meals WHERE id=meal_id AND weekday=$1",
+            text: "SELECT id FROM meals, weekly_meals WHERE id=meal_id AND weekday=$1",
             values: [new Date().getDay()],
         };
         const result = (await database.query(select)).rows.map(r => r["id"]).join(", ");
+
+        if (result === "") {
+            throw new Error("no meals served today");
+        }
 
         const update = {
             text: `UPDATE meals SET last_served=CURRENT_DATE WHERE id IN (${result})`,

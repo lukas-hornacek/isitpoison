@@ -17,7 +17,7 @@ export default function MealsView() {
         return <Spinner />;
     }
 
-    const mealItems = meals!.map(meal =>
+    const mealItems = meals?.map(meal =>
         <MealCard key={meal.id} meal={meal} />
     );
     
