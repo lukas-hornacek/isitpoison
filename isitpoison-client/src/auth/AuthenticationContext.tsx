@@ -77,7 +77,25 @@ export class Authentication {
             if (response.status === 400) {
               throw new Error("Session does not exist."); 
             }
-            throw new Error("Error logging out");
+            throw new Error("Error logging out.");
+        }
+    }
+
+    async register(username: string, password: string): Promise<void> {
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+            credentials: "include"
+        });
+
+        if (response.ok) {
+            await this.login(username, password);
+        } else {
+            if (response.status === 400) {
+              throw new Error("User already exists."); 
+            }
+            throw new Error("Error logging in.");
         }
     }
 }
