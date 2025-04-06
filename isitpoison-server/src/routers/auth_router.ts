@@ -73,6 +73,12 @@ auth_router.post("/register", async (req, res) => {
         res.status(400).send("Field 'password' of type string is required.");
         return;
     }
+    if (req.body["username"].trim() === "") {
+        res.status(400).send("Username must not be an empty string.");
+    }
+    if (req.body["password"].length <= 14) {
+        res.status(400).send("Password must be at least 14 characters long.");
+    }
 
     try {
         const hash = await bcrypt.hash(req.body["password"], 10);
