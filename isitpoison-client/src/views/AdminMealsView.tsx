@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 
 import { useGetMeals } from "../data/meal";
-import { Button, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Button, ButtonGroup, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { useContext, useState } from "react";
 import { Ordering } from "../common";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
@@ -35,10 +35,28 @@ export default function AdminMealsView() {
     }
 
     const mealItems = meals!.map(meal => <AdminMealItem key={meal.id} meal={meal} />);
-    
+
+    const weeklyScript = async () => {
+        await fetch("/api/meal/update/weekly", {
+            method: "POST",
+            credentials: "include"
+        });
+    };
+
+    const dailyScript = async () => {
+        await fetch("/api/meal/update/daily", {
+            method: "POST",
+            credentials: "include"
+        });
+    };
+
     return (
         <Container>
             <h2>Jedlá</h2>
+            <ButtonGroup>
+                <Button onClick={weeklyScript}>Týždenné zmeny</Button>
+                <Button onClick={dailyScript}>Denné zmeny</Button>
+            </ButtonGroup>
             {isAddingMeal ? <AdminAddMeal setIsAddingMeal={setIsAddingMeal} /> : null}
 
             <ButtonToolbar className="d-flex justify-content-center">

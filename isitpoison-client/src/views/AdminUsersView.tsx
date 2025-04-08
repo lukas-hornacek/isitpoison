@@ -59,7 +59,7 @@ function AdminUserItem({ user }: { user: User }) {
                 </Col>
             </Row>
             Používateľom od {user.joined.toString()} <br></br>
-            Počet recenzií: {user.reviews}
+            {user.is_admin ? null : `Počet recenzií: ${user.reviews}`}
         </ListGroupItem>
     );
 }

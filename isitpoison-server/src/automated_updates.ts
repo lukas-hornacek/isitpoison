@@ -31,6 +31,8 @@ export async function updateLastServed() {
             console.error(e.message);
         }
     }
+
+    console.log("daily update");
 }
 
 // ran each week
@@ -50,6 +52,8 @@ export async function updateWeeklyMeals() {
             console.error(e.message);
         }
     }
+
+    console.log("weekly update");
 }
 
 async function updateEatAndMeet() {

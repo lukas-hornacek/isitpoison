@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import express, { Request, Response, NextFunction } from "express";
-import cron from "node-cron";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import pgSimple from "connect-pg-simple";
@@ -12,13 +11,8 @@ import { canteen_router } from "./routers/canteen_router.js";
 import { meal_router } from "./routers/meal_router.js";
 import { review_router } from "./routers/review_router.js";
 import { user_router } from "./routers/user_router.js";
-import { updateWeeklyMeals, updateLastServed } from "./automated_updates.js";
 import { auth_router } from "./routers/auth_router.js";
 import { pool } from "./model/database_connection.js";
-
-// automated database updates
-cron.schedule("0 1 0 * * Monday", updateWeeklyMeals);
-cron.schedule("0 2 0 * * *", updateLastServed);
 
 const app = express();
 const port = 3000;
