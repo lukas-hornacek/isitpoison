@@ -1,6 +1,7 @@
 import express from "express";
 import { delete_meal, insert_meal, select_meal, select_meals, select_weekly_meals, update_meal } from "../queries/meal_queries.js";
 import { ordering, Ordering } from "../model/types.js";
+import { updateLastServed, updateWeeklyMeals } from "../automated_updates.js";
 
 export const meal_router = express.Router();
 
@@ -127,6 +128,24 @@ meal_router.put("/:id(\\d+)", async (req, res) => {
                 res.status(500).send("unknown error");
             }
         }
+    } else {
+        res.status(401).send();
+    }
+});
+
+meal_router.post("/update/daily", async (req, res) => {
+    if (req.session && req.session.userId && req.session.isAdmin) {
+        updateLastServed();
+        res.status(200).send();
+    } else {
+        res.status(401).send();
+    }
+});
+
+meal_router.post("/update/weekly", async (req, res) => {
+    if (req.session && req.session.userId && req.session.isAdmin) {
+        updateWeeklyMeals();
+        res.status(200).send();
     } else {
         res.status(401).send();
     }
