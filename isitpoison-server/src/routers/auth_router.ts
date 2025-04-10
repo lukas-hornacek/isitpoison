@@ -77,8 +77,8 @@ auth_router.post("/register", async (req, res) => {
         res.status(400).send("Username must not be an empty string.");
         return;
     }
-    if (req.body["password"].length < 14) {
-        res.status(400).send("Password must be at least 14 characters long.");
+    if (req.body["password"].length < 10) {
+        res.status(400).send("Password must be at least 10 characters long.");
         return;
     }
 

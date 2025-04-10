@@ -18,7 +18,7 @@ export default function LoginView() {
         e.preventDefault();
         setValidated(true);
 
-        if (username === "" || password.length < 14) {
+        if (username === "" || password.length < 10) {
             return;
         }
         try {
@@ -37,7 +37,7 @@ export default function LoginView() {
     const register = async () => {
         setValidated(true);
 
-        if (username === "" || password.length < 14) {
+        if (username === "" || password.length < 10) {
             return;
         }
         try {
@@ -75,12 +75,12 @@ export default function LoginView() {
                     <Form.Control
                         type="password"
                         value={password}
-                        isValid={validated && password.length >= 14}
-                        isInvalid={validated && password.length < 14}
+                        isValid={validated && password.length >= 10}
+                        isInvalid={validated && password.length < 10}
                         onChange={(e) => setPassword(e.target.value)}
                         required />
                     <Form.Control.Feedback type="invalid">
-                        Heslo musí mať aspoň 14 znakov
+                        Heslo musí mať aspoň 10 znakov
                     </Form.Control.Feedback>
                 </Form.Group>
             </Container>
