@@ -33,7 +33,12 @@ review_router.delete("/:id(\\d+)", async (req, res) => {
 
     if (req.session && req.session.userId) {
         try {
-            const result = await delete_review(id, req.session.userId);
+            let result;
+            if (req.session.isAdmin) {
+                result = await delete_review(id);
+            } else {
+                result = await delete_review(id, req.session.userId);
+            }
             if (result.rowCount === 0) {
                 res.status(400).send("review does not exist");
             } else {
@@ -59,10 +64,6 @@ review_router.post("/", async (req, res) => {
             res.status(400).send("field 'meal_id' of type number is required");
             return;
         }
-        if (typeof review["user_id"] !== "number") {
-            res.status(400).send("field 'user_id' of type number is required");
-            return;
-        }
         if (typeof review["rating"] !== "number") {
             res.status(400).send("field 'rating' of type number is required");
             return;
@@ -71,13 +72,9 @@ review_router.post("/", async (req, res) => {
             res.status(400).send("field 'text' must be a string");
             return;
         }
-        if (review["user_id"] !== req.session.userId) {
-            res.status(401).send();
-            return;
-        }
 
         try {
-            await insert_review(review["meal_id"], review["user_id"], review["rating"], review["text"]);
+            await insert_review(review["meal_id"], req.session.userId, review["rating"], review["text"]);
             res.send();
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -88,7 +85,7 @@ review_router.post("/", async (req, res) => {
                 } else if (e.message.includes("reviews_meal_id_fkey")) {
                     res.status(400).send(`meal with ID ${review["meal_id"]} does not exist`);
                 } else if (e.message.includes("reviews_user_id_fkey")) {
-                    res.status(400).send(`user with ID ${review["user_id"]} does not exist`);
+                    res.status(400).send(`user with ID ${req.session.userId} does not exist`);
                 } else {
                     res.status(400).send(e.message);
                 }
@@ -110,20 +107,12 @@ review_router.put("/:id(\\d+)", async (req, res) => {
             res.status(400).send("field 'meal_id' is missing or of wrong type");
             return;
         }
-        if (typeof review["user_id"] !== "number") {
-            res.status(400).send("field 'user_id' is missing or of wrong type");
-            return;
-        }
         if (typeof review["rating"] !== "number") {
             res.status(400).send("field 'rating' is missing or of wrong type");
             return;
         }
         if (review["text"] !== undefined && typeof review["text"] !== "string") {
             res.status(400).send("field 'text' is of wrong type");
-            return;
-        }
-        if (review["user_id"] !== req.session.userId) {
-            res.status(401).send();
             return;
         }
 
@@ -141,7 +130,7 @@ review_router.put("/:id(\\d+)", async (req, res) => {
                 } else if (e.message.includes("reviews_meal_id_fkey")) {
                     res.status(400).send(`meal with ID ${review["meal_id"]} does not exist`);
                 } else if (e.message.includes("reviews_user_id_fkey")) {
-                    res.status(400).send(`user with ID ${review["user_id"]} does not exist`);
+                    res.status(400).send(`user with ID ${req.session.userId} does not exist`);
                 } else {
                     res.status(400).send(e.message);
                 }
