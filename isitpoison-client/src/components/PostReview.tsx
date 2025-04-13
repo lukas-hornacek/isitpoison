@@ -8,7 +8,7 @@ import { Review } from "../types";
 export default function PostReview({ mealId, setIsDisplayed, review }: { mealId: number,
     setIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>, review?: Review }) {
     const [rating, setRating] = useState<number>(review?.rating ?? 0);
-    const [text, setText] = useState<undefined | string>(review?.text !== "NULL" ? review?.text : "");
+    const [text, setText] = useState<string>(review?.text ?? "");
 
     const auth = useContext(AuthenticationContext)!;
     const [error, setError] = useState("");
@@ -25,8 +25,9 @@ export default function PostReview({ mealId, setIsDisplayed, review }: { mealId:
             return;
         }
 
+        const t = text === "" ? undefined : text;
         const ok = review ? await updateReview(review.id, review.meal_id, review.user_id,
-            rating, text) : await addReview(mealId, auth.userId, rating, text);
+            rating, t) : await addReview(mealId, auth.userId, rating, t);
         if (ok) {
             setIsDisplayed(false);
         } else {

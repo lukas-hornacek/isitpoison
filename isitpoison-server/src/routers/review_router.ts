@@ -6,8 +6,7 @@ export const review_router = express.Router();
 review_router.get("/", async (req, res) => {
     if (req.session && req.session.userId && req.session.isAdmin) {
         const search = req.query["search"]?.toString().toLowerCase();
-
-        res.json((await select_reviews(search)).rows);
+        res.json((await select_reviews(search)).rows.map(r => r.text === "NULL" ? {...r, text: undefined} : r));
     } else {
         res.status(401).send();
     }
@@ -15,14 +14,14 @@ review_router.get("/", async (req, res) => {
 
 review_router.get("/meal/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
-    res.json((await select_review_by_meal(id)).rows);
+    res.json((await select_review_by_meal(id)).rows.map(r => r.text === "NULL" ? {...r, text: undefined} : r));
 });
 
 review_router.get("/user/:id(\\d+)", async (req, res) => {
     const id = Number(req.params["id"]);
 
     if (req.session && req.session.userId && (req.session.userId === id || req.session.isAdmin)) {
-        res.json((await select_review_by_user(id)).rows);
+        res.json((await select_review_by_user(id)).rows.map(r => r.text === "NULL" ? {...r, text: undefined} : r));
     } else {
         res.status(401).send();
     }
