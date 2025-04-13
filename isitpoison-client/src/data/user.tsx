@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { fetcher } from "./fetcher";
 import { User } from "../types";
@@ -21,4 +21,18 @@ export function useGetUser(id?: number) {
         isLoading: isLoading,
         error: error,
     };
+}
+
+export async function deleteUser(id: number) {
+    const res =  await fetch(`/api/user/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/user");
+        mutate(`/api/user/${id}`);
+    }
+
+    return res.ok;
 }

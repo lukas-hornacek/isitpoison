@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { fetcher } from "./fetcher";
 import { Review } from "../types";
@@ -31,4 +31,53 @@ export function useGetReviewsByUser(id?: number) {
         isLoading: isLoading,
         error: error,
     };
+}
+
+export async function deleteReview(id: number, userId: number, mealId: number) {
+    const res =  await fetch(`/api/review/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/review");
+        mutate(`/api/review/user/${userId}`);
+        mutate(`/api/review/meal/${mealId}`);
+    }
+
+    return res.ok;
+}
+
+export async function addReview(mealId: number, userId: number, rating: number, text?: string) {
+    const res =  await fetch("/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ meal_id: mealId, rating, text }),
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/review");
+        mutate(`/api/review/user/${userId}`);
+        mutate(`/api/review/meal/${mealId}`);
+    }
+
+    return res.ok;
+}
+
+export async function updateReview(id: number, mealId: number, userId: number, rating: number, text?: string) {
+    const res =  await fetch(`/api/review/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ meal_id: mealId, rating, text }),
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/review");
+        mutate(`/api/review/user/${userId}`);
+        mutate(`/api/review/meal/${mealId}`);
+    }
+
+    return res.ok;
 }

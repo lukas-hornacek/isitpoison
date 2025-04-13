@@ -4,7 +4,7 @@ import ReviewItem from "./ReviewItem";
 
 export default function ReviewList({ reviews }: { reviews: Review[]}) {
     const reviewItems = reviews.map(r =>
-        <ReviewItem key={r.id} {...r}/>
+        <ReviewItem key={r.id} review={r}/>
     );
 
     return (

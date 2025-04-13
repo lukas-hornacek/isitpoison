@@ -16,7 +16,7 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
     
     const [isPostingReview, setIsPostingReview] = useState(false);
 
-    const postReview = isPostingReview ? <PostReview setIsPostingReview={setIsPostingReview} />
+    const postReview = isPostingReview ? <PostReview mealId={meal.id} setIsDisplayed={setIsPostingReview} />
         : <div className="d-flex justify-content-end">
             <Button onClick={() => setIsPostingReview(true)}>Pridať recenziu</Button>
         </div>;
@@ -30,7 +30,7 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
                         <RatingDisplay rating={Number(meal.rating)} precision={2}/>
                     </Container>
                     <Container className="d-flex justify-content-center">
-                        Jedáleň: {canteen.isLoading ? <Spinner /> : canteen.canteen!.name}
+                        Jedáleň: {canteen.isLoading ? <Spinner /> : canteen.canteen?.name}
                     </Container>
                     <Container className="d-flex justify-content-center">
                         Naposledy podávané: {meal.last_served}
@@ -39,7 +39,7 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
             </Modal.Header>
             <Modal.Body>
                 {auth.isLoggedIn && !auth.isAdmin ? postReview : null}
-                {reviews.isLoading ? <Spinner /> : <ReviewList reviews={reviews.reviews!}/>}
+                {reviews.isLoading ? <Spinner /> : <ReviewList reviews={reviews.reviews ?? []}/>}
             </Modal.Body>
         </Modal> 
     );

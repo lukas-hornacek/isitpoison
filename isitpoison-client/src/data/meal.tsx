@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import { fetcher } from "./fetcher";
 import { Meal } from "../types";
@@ -45,4 +45,47 @@ export function useGetMeals(canteen_ids?: number[], ordering?: Ordering, search?
         isLoading: isLoading,
         error: error
     };
+}
+
+export async function deleteMeal(id: number) {
+    const res =  await fetch(`/api/meal/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/meal");
+    }
+
+    return res.ok;
+}
+
+export async function addMeal(name: string, canteenId: number) {
+    const res =  await fetch("/api/meal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name, canteen_id: canteenId }),
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/meal");
+    }
+
+    return res.ok;
+}
+
+export async function updateMeal(id: number, name: string, canteenId: number) {
+    const res =  await fetch(`/api/meal/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name, canteen_id: canteenId }),
+        credentials: "include"
+    });
+
+    if (res.ok) {
+        mutate("/api/meal");
+    }
+
+    return res.ok;
 }

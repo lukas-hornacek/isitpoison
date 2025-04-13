@@ -1,13 +1,13 @@
 import Container from "react-bootstrap/Container";
 
-import { useGetMeals } from "../data/meal";
+import { addMeal, deleteMeal, updateMeal, useGetMeals } from "../data/meal";
 import { Button, ButtonGroup, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { useContext, useState } from "react";
 import { Ordering } from "../common";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
 import RatingDisplay from "../components/RatingDisplay";
 import { Meal } from "../types";
-import { useGetCanteen, useGetCanteens } from "../data/canteen";
+import { useGetCanteens } from "../data/canteen";
 
 export interface Filters {
     canteen_ids?: number[],
@@ -57,7 +57,6 @@ export default function AdminMealsView() {
                 <Button onClick={weeklyScript}>Týždenné zmeny</Button>
                 <Button onClick={dailyScript}>Denné zmeny</Button>
             </ButtonGroup>
-            {isAddingMeal ? <AdminAddMeal setIsAddingMeal={setIsAddingMeal} /> : null}
 
             <ButtonToolbar className="d-flex justify-content-center">
                 {isAddingMeal ? null : <Button onClick={() => setIsAddingMeal(true)}>Pridať jedlo</Button>}
@@ -73,59 +72,104 @@ export default function AdminMealsView() {
                 </InputGroup>
             </ButtonToolbar>
 
-            <ListGroup>{mealItems}</ListGroup>
+            <ListGroup>
+                {isAddingMeal ? <AdminAddMeal initialName={""} initialCanteen={1} 
+                setIsDisplayed={setIsAddingMeal} /> : null}
+                {mealItems}
+            </ListGroup>
         </Container>
     );
 }
 
 function AdminMealItem({ meal }: { meal: Meal }) {
-    const { canteen, isLoading } = useGetCanteen(meal.canteen_id);
+    const { canteens, isLoading } = useGetCanteens();
+    const [isEditing, setIsEditing] = useState(false);
 
-    return (
-        <ListGroupItem key={meal.id} variant="dark">
-            <Row>
-                <Col><h4>{meal.name}</h4></Col>
-                <Col>Jedáleň: {isLoading ? <Spinner /> : canteen!.name}</Col>
-                <Col>Naposledy podávané: {meal.last_served}</Col>
-                <Col className="d-flex justify-content-end"><Button variant="danger">Odstrániť</Button></Col>
-            </Row>
-            <RatingDisplay rating={Number(meal.rating)} precision={2} />
-        </ListGroupItem>
-    );
+    const remove = async () => {
+        await deleteMeal(meal.id);
+    };
+
+    if (isEditing) {
+        return (
+            <AdminAddMeal initialName={meal.name} initialCanteen={meal.canteen_id} 
+            setIsDisplayed={setIsEditing} mealId={meal.id} />
+        );
+    } else {
+        return (
+            <ListGroupItem key={meal.id} variant="dark">
+                <Row>
+                    <Col><h4>{meal.name}</h4></Col>
+                    <Col>Jedáleň: {isLoading ? <Spinner /> : canteens?.find(c => c.id === meal.canteen_id)?.name}</Col>
+                    <Col>Naposledy podávané: {meal.last_served}</Col>
+                    <Col className="d-flex justify-content-end">
+                        <Button variant="danger" onClick={remove}>Odstrániť</Button>
+                        <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
+                    </Col>
+                </Row>
+                <RatingDisplay rating={Number(meal.rating)} precision={2} />
+            </ListGroupItem>
+        );
+    }
 }
 
-function AdminAddMeal({ setIsAddingMeal }: { setIsAddingMeal: React.Dispatch<React.SetStateAction<boolean>> }) {
+function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: { initialName: string, initialCanteen: number,
+    setIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>, mealId?: number }) {
     const { canteens, isLoading } = useGetCanteens();
 
     // form fields
-    const [canteen, setCanteen] = useState(1);
-    const [name, setName] = useState("");
+    const [canteen, setCanteen] = useState(initialCanteen);
+    const [name, setName] = useState(initialName);
+    const [error, setError] = useState("");
+    const [validated, setValidated] = useState(false);
 
     if (isLoading) {
         return <Spinner />;
     }
 
-    const submit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsAddingMeal(false);
+        setValidated(true);
+
+        if (name === "") {
+            return;
+        }
+
+        const ok = mealId ? await updateMeal(mealId, name, canteen) : await addMeal(name, canteen);
+        if (ok) {
+            setIsDisplayed(false);
+        } else {
+            setError("Pridanie jedla bolo neúspešné.");
+        }
     };
 
     return (
-        <Form onSubmit={submit}>
-            <Form.Group>
-                <Form.Label>Názov</Form.Label>
-                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>Jedáleň</Form.Label>
-                <Form.Select value={canteen} onChange={(e) => setCanteen(Number(e.target.value))}>
-                    {canteens?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </Form.Select>
-            </Form.Group>
-            <Form.Group className="d-flex justify-content-center">
-                <Button type="submit">Pridať</Button>
-                <Button onClick={() => setIsAddingMeal(false)} variant="danger">Zrušiť</Button>
-            </Form.Group>
-        </Form>
+        <ListGroupItem key={mealId ?? -1} variant="dark">
+            <Form noValidate onSubmit={submit}>
+                <Container>
+                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    <Form.Group>
+                        <h4><Form.Control
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            type="text"
+                            isValid={validated && name !== ""}
+                            isInvalid={validated && name === ""} /></h4>
+                        <Form.Control.Feedback type="invalid">
+                            Názov nesmie byť prázdny
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Jedáleň</Form.Label>
+                        <Form.Select value={canteen} onChange={(e) => setCanteen(Number(e.target.value))}>
+                            {canteens?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="d-flex justify-content-center">
+                        <Button type="submit">Uložiť</Button>
+                        <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
+                    </Form.Group>
+                </Container>
+            </Form>
+        </ListGroupItem>
     );
 }

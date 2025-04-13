@@ -38,7 +38,7 @@ export default function AdminReviewsView() {
                 </InputGroup>
             </ButtonToolbar>
 
-            <ReviewList reviews={reviews!} />
+            {reviews ? <ReviewList reviews={reviews} /> : null}
         </Container>        
     );
 }

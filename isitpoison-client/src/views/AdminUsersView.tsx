@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
 import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
-import { useGetUsers } from "../data/user";
+import { deleteUser, useGetUsers } from "../data/user";
 import { User } from "../types";
 
 export default function AdminUsersView() {
@@ -48,6 +48,10 @@ export default function AdminUsersView() {
 }
 
 function AdminUserItem({ user }: { user: User }) {
+    const remove = async () => {
+        await deleteUser(user.id);
+    };
+
     return (
         <ListGroupItem key={user.id} variant="dark">
             <Row>
@@ -55,7 +59,7 @@ function AdminUserItem({ user }: { user: User }) {
                     <h4>{user.username}</h4>
                 </Col>
                 <Col className="d-flex justify-content-end">
-                    <Button variant="danger">Odstrániť</Button>
+                    <Button variant="danger" onClick={remove}>Odstrániť</Button>
                 </Col>
             </Row>
             Používateľom od {user.joined.toString()} <br></br>

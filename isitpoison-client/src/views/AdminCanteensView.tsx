@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
-import { useGetCanteens } from "../data/canteen";
+import { addCanteen, deleteCanteen, updateCanteen, useGetCanteens } from "../data/canteen";
 import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Canteen } from "../types";
 import CanteenInformation from "../components/CanteenInformation";
@@ -30,7 +30,6 @@ export default function AdminCanteensView() {
     return (
         <Container>
             <h2>Jedálne</h2>
-            {isAddingCanteen ? <AdminAddCanteen setIsAddingCanteen={setIsAddingCanteen} /> : null}
             <ButtonToolbar className="d-flex justify-content-center">
                 {isAddingCanteen ? null : <Button onClick={() => setIsAddingCanteen(true)}>Pridať jedáleň</Button>}
                 <InputGroup>
@@ -45,76 +44,108 @@ export default function AdminCanteensView() {
                 </InputGroup>
             </ButtonToolbar>
 
-            <ListGroup>{canteenItems}</ListGroup>
+            <ListGroup>
+                {isAddingCanteen ? <AdminAddCanteen setIsDisplayed={setIsAddingCanteen} /> : null}
+                {canteenItems}
+            </ListGroup>
         </Container>
     );
 }
 
 function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
-    return (
-        <ListGroupItem key={canteen.id} variant="dark">
-            <Row>
-                <Col>
-                    <h4>{canteen.name}</h4>
-                </Col>
-                <Col className="d-flex justify-content-end">
-                    <Button variant="danger">Odstrániť</Button>
-                </Col>
-            </Row>
-            <CanteenInformation canteen={canteen} />
-        </ListGroupItem>
-    );
+    const [isEditing, setIsEditing] = useState(false);
+
+    const remove = async () => {
+        await deleteCanteen(canteen.id);
+    };
+
+    if (isEditing) {
+        return <AdminAddCanteen canteen={canteen} setIsDisplayed={setIsEditing} />;
+    } else {
+        return (
+            <ListGroupItem key={canteen.id} variant="dark">
+                <Row>
+                    <Col>
+                        <h4>{canteen.name}</h4>
+                    </Col>
+                    <Col className="d-flex justify-content-end">
+                        <Button variant="danger" onClick={remove}>Odstrániť</Button>
+                        <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
+                    </Col>
+                </Row>
+                <CanteenInformation canteen={canteen} />
+            </ListGroupItem>
+        );
+    }
 }
 
-function AdminAddCanteen({ setIsAddingCanteen }: { setIsAddingCanteen: React.Dispatch<React.SetStateAction<boolean>> }) {
+function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>, canteen?: Canteen }) {
     // form fields
-    const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [mondayOpen, setMondayOpen] = useState<string>("");
-    const [tuesdayOpen, setTuesdayOpen] = useState<string>("");
-    const [wednesdayOpen, setWednesdayOpen] = useState<string>("");
-    const [thursdayOpen, setThursdayOpen] = useState<string>("");
-    const [fridayOpen, setFridayOpen] = useState<string>("");
-    const [saturdayOpen, setSaturdayOpen] = useState<string>("");
-    const [sundayOpen, setSundayOpen] = useState<string>("");
-    const [mondayClose, setMondayClose] = useState<string>("");
-    const [tuesdayClose, setTuesdayClose] = useState<string>("");
-    const [wednesdayClose, setWednesdayClose] = useState<string>("");
-    const [thursdayClose, setThursdayClose] = useState<string>("");
-    const [fridayClose, setFridayClose] = useState<string>("");
-    const [saturdayClose, setSaturdayClose] = useState<string>("");
-    const [sundayClose, setSundayClose] = useState<string>("");
+    const [name, setName] = useState(canteen?.name ?? "");
+    const [address, setAddress] = useState(canteen?.location ?? "");
+    const [mondayOpen, setMondayOpen] = useState<string>(canteen?.monday_open ?? "");
+    const [tuesdayOpen, setTuesdayOpen] = useState<string>(canteen?.tuesday_open ?? "");
+    const [wednesdayOpen, setWednesdayOpen] = useState<string>(canteen?.wednesday_open ?? "");
+    const [thursdayOpen, setThursdayOpen] = useState<string>(canteen?.thursday_open ?? "");
+    const [fridayOpen, setFridayOpen] = useState<string>(canteen?.friday_open ?? "");
+    const [saturdayOpen, setSaturdayOpen] = useState<string>(canteen?.saturday_open ?? "");
+    const [sundayOpen, setSundayOpen] = useState<string>(canteen?.sunday_open ?? "");
+    const [mondayClose, setMondayClose] = useState<string>(canteen?.monday_close ?? "");
+    const [tuesdayClose, setTuesdayClose] = useState<string>(canteen?.tuesday_close ?? "");
+    const [wednesdayClose, setWednesdayClose] = useState<string>(canteen?.wednesday_close ?? "");
+    const [thursdayClose, setThursdayClose] = useState<string>(canteen?.thursday_close ?? "");
+    const [fridayClose, setFridayClose] = useState<string>(canteen?.friday_close ?? "");
+    const [saturdayClose, setSaturdayClose] = useState<string>(canteen?.saturday_close ?? "");
+    const [sundayClose, setSundayClose] = useState<string>(canteen?.sunday_close ?? "");
 
-    const submit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    const [error, setError] = useState("");
+
+    const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsAddingCanteen(false);
+
+        const ok = canteen ? await updateCanteen(canteen.id, name, address, mondayOpen, mondayClose,
+            tuesdayOpen, tuesdayClose, wednesdayOpen, wednesdayClose, thursdayOpen, thursdayClose,
+            fridayOpen, fridayClose, saturdayOpen, saturdayClose, sundayOpen, sundayClose) 
+            : await addCanteen(name, address, mondayOpen, mondayClose, tuesdayOpen, tuesdayClose,
+            wednesdayOpen, wednesdayClose, thursdayOpen, thursdayClose, fridayOpen, fridayClose,
+            saturdayOpen, saturdayClose, sundayOpen, sundayClose);
+        if (ok) {
+            setIsDisplayed(false);
+        } else {
+            setError("Pridanie jedla bolo neúspešné.");
+        }
     };
 
     return (
-        <Form onSubmit={submit}>
-            <Form.Group>
-                <Form.Label>Názov</Form.Label>
-                <Form.Control value={name} onChange={(e) => setName(e.target.value)} type="text"/>
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>Adresa</Form.Label>
-                <Form.Control value={address} onChange={(e) => setAddress(e.target.value)} type="text"/>
-            </Form.Group>
-            <Form.Group>
-                Otváracie hodiny
-                <OpeningHours day={Weekday.Monday} open={mondayOpen} setOpen={setMondayOpen} close={mondayClose} setClose={setMondayClose} />
-                <OpeningHours day={Weekday.Tuesday} open={tuesdayOpen} setOpen={setTuesdayOpen} close={tuesdayClose} setClose={setTuesdayClose} />
-                <OpeningHours day={Weekday.Wednesday} open={wednesdayOpen} setOpen={setWednesdayOpen} close={wednesdayClose} setClose={setWednesdayClose}/>
-                <OpeningHours day={Weekday.Thursday} open={thursdayOpen} setOpen={setThursdayOpen} close={thursdayClose} setClose={setThursdayClose}/>
-                <OpeningHours day={Weekday.Friday} open={fridayOpen} setOpen={setFridayOpen} close={fridayClose} setClose={setFridayClose}/>
-                <OpeningHours day={Weekday.Saturday} open={saturdayOpen} setOpen={setSaturdayOpen} close={saturdayClose} setClose={setSaturdayClose}/>
-                <OpeningHours day={Weekday.Sunday} open={sundayOpen} setOpen={setSundayOpen} close={sundayClose} setClose={setSundayClose}/>
-            </Form.Group>
-            <Form.Group className="d-flex justify-content-center">
-                <Button type="submit">Pridať</Button>
-                <Button onClick={() => setIsAddingCanteen(false)} variant="danger">Zrušiť</Button>
-            </Form.Group>
-        </Form>
+        <ListGroupItem key={canteen?.id ?? -1} variant="dark">
+            <Form onSubmit={submit}>
+                <Container>
+                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    <Form.Group>
+                        <Form.Label>Názov</Form.Label>
+                        <Form.Control value={name} onChange={(e) => setName(e.target.value)} type="text"/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Adresa</Form.Label>
+                        <Form.Control value={address} onChange={(e) => setAddress(e.target.value)} type="text" />
+                    </Form.Group>
+                    <Form.Group>
+                        Otváracie hodiny
+                        <OpeningHours day={Weekday.Monday} open={mondayOpen} setOpen={setMondayOpen} close={mondayClose} setClose={setMondayClose} />
+                        <OpeningHours day={Weekday.Tuesday} open={tuesdayOpen} setOpen={setTuesdayOpen} close={tuesdayClose} setClose={setTuesdayClose} />
+                        <OpeningHours day={Weekday.Wednesday} open={wednesdayOpen} setOpen={setWednesdayOpen} close={wednesdayClose} setClose={setWednesdayClose}/>
+                        <OpeningHours day={Weekday.Thursday} open={thursdayOpen} setOpen={setThursdayOpen} close={thursdayClose} setClose={setThursdayClose}/>
+                        <OpeningHours day={Weekday.Friday} open={fridayOpen} setOpen={setFridayOpen} close={fridayClose} setClose={setFridayClose}/>
+                        <OpeningHours day={Weekday.Saturday} open={saturdayOpen} setOpen={setSaturdayOpen} close={saturdayClose} setClose={setSaturdayClose}/>
+                        <OpeningHours day={Weekday.Sunday} open={sundayOpen} setOpen={setSundayOpen} close={sundayClose} setClose={setSundayClose}/>
+                    </Form.Group>
+                    <Form.Group className="d-flex justify-content-center">
+                        <Button type="submit">Pridať</Button>
+                        <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
+                    </Form.Group>
+                </Container>
+            </Form>
+        </ListGroupItem>
     );
 }
 

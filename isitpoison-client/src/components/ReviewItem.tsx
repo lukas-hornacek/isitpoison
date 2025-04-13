@@ -4,39 +4,25 @@ import { useGetUser } from "../data/user";
 import RatingDisplay from "./RatingDisplay";
 import { Authentication, AuthenticationContext } from "../auth/AuthenticationContext";
 import { useContext, useState } from "react";
-import { Form } from "react-bootstrap";
-import RatingInput from "./RatingInput";
+import { deleteReview } from "../data/review";
+import PostReview from "./PostReview";
 
-export default function ReviewItem({ user_id, rating, text }: Review) {
+export default function ReviewItem({ review }: { review: Review }) {
     const auth: Authentication = useContext(AuthenticationContext)!;
-    const { user, isLoading } = useGetUser(user_id);
+    const { user, isLoading } = useGetUser(review.user_id);
 
     const [isEditing, setIsEditing] = useState(false);
-    const [newRating, setNewRating] = useState(rating);
-    const [newText, setNewText] = useState(text);
 
-    const submit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsEditing(false);
+    const remove = async () => {
+        if (!auth.isLoggedIn || (auth.userId !== review.user_id && !auth.isAdmin)) {
+            return;
+        }
+
+        await deleteReview(review.id, review.user_id, review.meal_id);
     };
 
     if (isEditing) {
-        return (
-            <ListGroupItem variant="dark">
-                {isLoading ? <Spinner animation="grow" /> : <h4>{user?.username}</h4>}
-                <Form onSubmit={submit}>
-                    <RatingInput selected={newRating} setSelected={setNewRating}/>
-                    <Form.Group>
-                        <Form.Label>Text: </Form.Label>
-                        <Form.Control value={newText} onChange={(e) => setNewText(e.target.value)} type="text" />
-                    </Form.Group>
-                    <Form.Group className="d-flex justify-content-center">
-                        <Button type="submit">Upraviť</Button>
-                        <Button onClick={() => setIsEditing(false)} variant="danger">Zrušiť</Button>
-                    </Form.Group>
-                </Form>
-            </ListGroupItem>
-        );
+        return <PostReview mealId={review.meal_id} setIsDisplayed={setIsEditing} review={review}/>;
     } else {
         return (
             <ListGroupItem variant="dark">
@@ -45,14 +31,14 @@ export default function ReviewItem({ user_id, rating, text }: Review) {
                         {isLoading ? <Spinner animation="grow" /> : <h4>{user?.username}</h4>}
                     </Col>
                     <Col className="d-flex justify-content-end">
-                        {auth.isLoggedIn && !auth.isAdmin && auth.userId === user_id ?
+                        {auth.isLoggedIn && !auth.isAdmin && auth.userId === review.user_id ?
                         <Button onClick={() => setIsEditing(true)}>Upraviť</Button> : null}
-                        {auth.isLoggedIn && (auth.isAdmin || auth.userId === user_id) ?
-                        <Button variant="danger">Odstrániť</Button> : null}
+                        {auth.isLoggedIn && (auth.isAdmin || auth.userId === review.user_id) ?
+                        <Button variant="danger" onClick={remove}>Odstrániť</Button> : null}
                     </Col>
                 </Row>
-                <RatingDisplay rating={newRating} precision={0}/>
-                {newText === "NULL" ? null : <div>Text: {newText}</div>}
+                <RatingDisplay rating={review.rating} precision={0}/>
+                {review.text === "NULL" ? null : <div>Text: {review.text}</div>}
             </ListGroupItem>
         );
     }
