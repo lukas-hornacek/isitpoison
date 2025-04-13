@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS reviews, users, weekly_meals, meals, canteens;
 -- if X_open is NULL, canteen is not open for day X
 CREATE TABLE canteens (
     id serial primary key,
-    name text unique not null,
+    name varchar(128) unique not null,
     location text not null,
     monday_open     time,
     monday_close    time,
@@ -23,8 +23,8 @@ CREATE TABLE canteens (
 
 CREATE TABLE meals (
     id serial primary key,
-    name text not null,
-    canteen_id int references canteens(id) not null,
+    name varchar(128) not null,
+    canteen_id int references canteens(id) not null ON DELETE CASCADE,
     last_served date CHECK (last_served <= CURRENT_DATE),
     uploaded date not null CHECK (uploaded <= CURRENT_DATE),
     UNIQUE (name, canteen_id)
@@ -32,13 +32,13 @@ CREATE TABLE meals (
 
 -- updates at the beginning of a week
 CREATE TABLE weekly_meals (
-    meal_id int not null references meals(id),
+    meal_id int not null references meals(id) ON DELETE CASCADE,
     weekday int not null CHECK (weekday >= 0) CHECK (weekday <= 6)
 );
 
 CREATE TABLE users (
     id serial primary key,
-    username text unique not null,
+    username varchar(32) unique not null,
     password varchar(60) not null,
     joined date not null,
     is_admin boolean
@@ -46,11 +46,12 @@ CREATE TABLE users (
 
 CREATE TABLE reviews (
     id serial primary key,
-    meal_id int references meals(id) not null,
-    user_id int references users(id) not null,
+    meal_id int not null references meals(id) ON DELETE CASCADE,
+    user_id int not null references users(id) ON DELETE CASCADE,
     uploaded date not null CHECK (uploaded <= CURRENT_DATE),
     rating int CHECK (rating >= 1) CHECK (rating <= 5),
-    text text
+    text varchar(1024),
+    UNIQUE (meal_id, user_id)
 );
 
 CREATE TABLE "session" (
