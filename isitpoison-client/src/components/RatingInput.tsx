@@ -5,7 +5,6 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 export default function RatingInput({ selected, setSelected }: { selected: number, setSelected: React.Dispatch<React.SetStateAction<number>>}) {
     const [hovered, setHovered] = useState<number | null>(null);
     
-    
     const handleClick = (index: number) => {
         setSelected(index + 1);
     };

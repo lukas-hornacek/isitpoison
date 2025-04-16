@@ -7,6 +7,7 @@ import { Authentication, AuthenticationContext } from "../auth/AuthenticationCon
 import PostReview from "./PostReview";
 import RatingDisplay from "./RatingDisplay";
 import { useGetCanteen } from "../data/canteen";
+import { dateToString } from "../common";
 
 export default function MealModal({ meal, show, handleClose }: { meal: Meal, show: boolean, handleClose: () => void }) {
     const auth: Authentication = useContext(AuthenticationContext)!;
@@ -32,9 +33,9 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
                     <Container className="d-flex justify-content-center">
                         Jedáleň: {canteen.isLoading ? <Spinner /> : canteen.canteen?.name}
                     </Container>
-                    <Container className="d-flex justify-content-center">
-                        Naposledy podávané: {meal.last_served}
-                    </Container>
+                    {meal.last_served ? <Container className="d-flex justify-content-center">
+                        Naposledy podávané: {dateToString(meal.last_served)}
+                    </Container> : null}
                 </Stack>
             </Modal.Header>
             <Modal.Body>
