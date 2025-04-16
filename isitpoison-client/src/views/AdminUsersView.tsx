@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
-import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner, Stack } from "react-bootstrap";
 import { deleteUser, useGetUsers } from "../data/user";
 import { User } from "../types";
 
@@ -26,6 +26,7 @@ export default function AdminUsersView() {
 
     return (
         <Container>
+        <Stack gap={2}>
             <h2>Používatelia</h2>
             <ButtonToolbar className="d-flex justify-content-center">
                 <InputGroup>
@@ -43,6 +44,7 @@ export default function AdminUsersView() {
             <ListGroup>
                 {userItems}
             </ListGroup>
+        </Stack>
         </Container>
     );
 }
@@ -54,11 +56,11 @@ function AdminUserItem({ user }: { user: User }) {
 
     return (
         <ListGroupItem key={user.id} variant="dark">
-            <Row>
+            <Row className="align-items-start">
                 <Col>
                     <h4>{user.username}</h4>
                 </Col>
-                <Col className="d-flex justify-content-end">
+                <Col className="d-flex justify-content-end gap-2">
                     <Button variant="danger" onClick={remove}>Odstrániť</Button>
                 </Col>
             </Row>

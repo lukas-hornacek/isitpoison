@@ -41,7 +41,7 @@ export default function FilterBar({ filters, setFilters }: { filters: MealFilter
     );
 
     return (
-        <ButtonToolbar className="d-flex justify-content-center">
+        <ButtonToolbar className="d-flex justify-content-center gap-2">
             <Dropdown>
                 <Dropdown.Toggle>Jedálne</Dropdown.Toggle>
                 <Dropdown.Menu>

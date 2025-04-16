@@ -22,7 +22,7 @@ export default function WeeklyView() {
     );
 
     return (
-        <>
+        <Stack gap={2}>
             <h2>Aktuálna ponuka</h2>
             <Container className="d-flex justify-content-center">
                 <WeekdayButtons day={day} setDay={setDay} />
@@ -30,6 +30,6 @@ export default function WeeklyView() {
             <Stack gap={3}>
                 {canteenItems}
             </Stack>
-        </>
+        </Stack>
     );
 }

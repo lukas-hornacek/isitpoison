@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
 import ReviewList from "../components/ReviewList";
-import { Button, ButtonToolbar, Container, Form, InputGroup, Spinner } from "react-bootstrap";
+import { Button, ButtonToolbar, Stack, Form, InputGroup, Spinner, Container } from "react-bootstrap";
 import { useGetReviews } from "../data/review";
 
 export default function AdminReviewsView() {
@@ -24,6 +24,7 @@ export default function AdminReviewsView() {
 
     return (
         <Container>
+        <Stack gap={2}>
             <h2>Recenzie</h2>
             <ButtonToolbar className="d-flex justify-content-center">
                 <InputGroup>
@@ -39,6 +40,7 @@ export default function AdminReviewsView() {
             </ButtonToolbar>
 
             {reviews ? <ReviewList reviews={reviews} /> : null}
-        </Container>        
+        </Stack>  
+        </Container>      
     );
 }

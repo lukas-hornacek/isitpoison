@@ -1,4 +1,4 @@
-import { Button, Container, Form, ListGroupItem } from "react-bootstrap";
+import { Button, Form, ListGroupItem, Stack } from "react-bootstrap";
 import RatingInput from "./RatingInput";
 import { useContext, useState } from "react";
 import { addReview, updateReview } from "../data/review";
@@ -38,7 +38,7 @@ export default function PostReview({ mealId, setIsDisplayed, review }: { mealId:
     return (
         <ListGroupItem variant="dark">
             <Form onSubmit={submit}>
-                <Container>
+                <Stack gap={2}>
                     {error !== "" ? <div className="text-danger">{error}</div> : null}
                     <Form.Group>
                         <Form.Label>Hodnotenie</Form.Label>
@@ -51,11 +51,11 @@ export default function PostReview({ mealId, setIsDisplayed, review }: { mealId:
                             value={text}
                             onChange={(e) => setText(e.target.value)}/>
                     </Form.Group>
-                    <Form.Group className="d-flex justify-content-center">
+                    <Form.Group className="d-flex justify-content-center gap-2">
                         <Button type="submit">Pridať</Button>
                         <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
-                </Container>
+                </Stack>
             </Form>
         </ListGroupItem>
     );

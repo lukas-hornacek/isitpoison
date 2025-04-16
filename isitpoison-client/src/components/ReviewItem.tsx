@@ -29,7 +29,11 @@ export default function ReviewItem({ review }: { review: Review }) {
             <ListGroupItem variant="dark">
                 <Row className="align-items-start">
                     <Col>
-                        {isLoading ? <Spinner animation="grow" /> : <div><h4>{user?.username}</h4>{dateToString(review.uploaded)}</div>}
+                        {isLoading ? <Spinner animation="grow" /> :
+                        <div className="d-flex align-items-baseline gap-2">
+                            <h4 className="mb-0">{user?.username}</h4>
+                            <small>{dateToString(review.uploaded)}</small>
+                        </div>}
                     </Col>
                     <Col className="d-flex justify-content-end gap-2">
                         {auth.isLoggedIn && !auth.isAdmin && auth.userId === review.user_id ?

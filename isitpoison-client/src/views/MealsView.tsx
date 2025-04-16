@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import MealCard from "../components/MealCard";
 import FilterBar from "../components/FilterBar";
 import { useGetMeals } from "../data/meal";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Stack } from "react-bootstrap";
 import { useState } from "react";
 import { MealFilters } from "../common";
 
@@ -22,7 +22,7 @@ export default function MealsView() {
     );
     
     return (
-        <>
+        <Stack gap={2}>
             <h2>Jedlá</h2>
             <FilterBar filters={filters} setFilters={setFilters} />
             <Container>
@@ -30,6 +30,6 @@ export default function MealsView() {
                     {mealItems}
                 </Row>
             </Container>
-        </>
+        </Stack>
     );
 }

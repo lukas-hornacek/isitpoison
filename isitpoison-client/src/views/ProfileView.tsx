@@ -1,4 +1,4 @@
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Row, Spinner, Stack } from "react-bootstrap";
 
 import ReviewList from "../components/ReviewList";
 import { useGetUser } from "../data/user";
@@ -16,6 +16,7 @@ export default function ProfileView() {
     if (auth.isLoggedIn) {
         return (
             <Container>
+            <Stack gap={2}>
                 <h2>Profil</h2>
                 <Row>
                     <Col sm={12} md={3}>
@@ -29,13 +30,16 @@ export default function ProfileView() {
                         {reviews.isLoading ? <Spinner animation="grow" /> : <ReviewList reviews={reviews.reviews!}/>}
                     </Col>
                 </Row>
+            </Stack>
             </Container>
         );
     } else {
         return (
             <Container>
+            <Stack gap={2}>
                 <h2>Profil</h2>
                 <div>Na zobrazenie profilu je potrebné prihlásiť sa.</div>
+            </Stack>
             </Container>
         );
     }

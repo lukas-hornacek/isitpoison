@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
 import { addCanteen, deleteCanteen, updateCanteen, useGetCanteens } from "../data/canteen";
-import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner, Stack } from "react-bootstrap";
 import { Canteen } from "../types";
 import CanteenInformation from "../components/CanteenInformation";
 import { Weekday, weekdayToString } from "../common";
@@ -29,8 +29,9 @@ export default function AdminCanteensView() {
 
     return (
         <Container>
+        <Stack gap={2}>
             <h2>Jedálne</h2>
-            <ButtonToolbar className="d-flex justify-content-center">
+            <ButtonToolbar className="d-flex justify-content-center gap-2">
                 {isAddingCanteen ? null : <Button onClick={() => setIsAddingCanteen(true)}>Pridať jedáleň</Button>}
                 <InputGroup>
                     <Form.Control
@@ -48,6 +49,7 @@ export default function AdminCanteensView() {
                 {isAddingCanteen ? <AdminAddCanteen setIsDisplayed={setIsAddingCanteen} /> : null}
                 {canteenItems}
             </ListGroup>
+        </Stack>
         </Container>
     );
 }
@@ -64,11 +66,11 @@ function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
     } else {
         return (
             <ListGroupItem key={canteen.id} variant="dark">
-                <Row>
+                <Row className="align-items-start">
                     <Col>
                         <h4>{canteen.name}</h4>
                     </Col>
-                    <Col className="d-flex justify-content-end">
+                    <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>
                         <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
                     </Col>
@@ -119,7 +121,7 @@ function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Di
     return (
         <ListGroupItem key={canteen?.id ?? -1} variant="dark">
             <Form onSubmit={submit}>
-                <Container>
+                <Stack gap={2}>
                     {error !== "" ? <div className="text-danger">{error}</div> : null}
                     <Form.Group>
                         <Form.Label>Názov</Form.Label>
@@ -139,11 +141,11 @@ function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Di
                         <OpeningHours day={Weekday.Saturday} open={saturdayOpen} setOpen={setSaturdayOpen} close={saturdayClose} setClose={setSaturdayClose}/>
                         <OpeningHours day={Weekday.Sunday} open={sundayOpen} setOpen={setSundayOpen} close={sundayClose} setClose={setSundayClose}/>
                     </Form.Group>
-                    <Form.Group className="d-flex justify-content-center">
+                    <Form.Group className="d-flex justify-content-center gap-2">
                         <Button type="submit">Pridať</Button>
                         <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
-                </Container>
+                </Stack>
             </Form>
         </ListGroupItem>
     );

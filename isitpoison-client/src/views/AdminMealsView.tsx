@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 
 import { addMeal, deleteMeal, updateMeal, useGetMeals } from "../data/meal";
-import { Button, ButtonGroup, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Button, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner, Stack } from "react-bootstrap";
 import { useContext, useState } from "react";
 import { Ordering } from "../common";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
@@ -52,13 +52,11 @@ export default function AdminMealsView() {
 
     return (
         <Container>
+        <Stack gap={2}>
             <h2>Jedlá</h2>
-            <ButtonGroup>
+            <ButtonToolbar className="d-flex justify-content-center gap-2">
                 <Button onClick={weeklyScript}>Týždenné zmeny</Button>
                 <Button onClick={dailyScript}>Denné zmeny</Button>
-            </ButtonGroup>
-
-            <ButtonToolbar className="d-flex justify-content-center">
                 {isAddingMeal ? null : <Button onClick={() => setIsAddingMeal(true)}>Pridať jedlo</Button>}
                 <InputGroup>
                     <Form.Control
@@ -77,6 +75,7 @@ export default function AdminMealsView() {
                 setIsDisplayed={setIsAddingMeal} /> : null}
                 {mealItems}
             </ListGroup>
+        </Stack>
         </Container>
     );
 }
@@ -97,11 +96,11 @@ function AdminMealItem({ meal }: { meal: Meal }) {
     } else {
         return (
             <ListGroupItem key={meal.id} variant="dark">
-                <Row>
+                <Row className="align-items-start">
                     <Col><h4>{meal.name}</h4></Col>
                     <Col>Jedáleň: {isLoading ? <Spinner /> : canteens?.find(c => c.id === meal.canteen_id)?.name}</Col>
                     <Col>Naposledy podávané: {meal.last_served}</Col>
-                    <Col className="d-flex justify-content-end">
+                    <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>
                         <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
                     </Col>
@@ -145,7 +144,7 @@ function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: {
     return (
         <ListGroupItem key={mealId ?? -1} variant="dark">
             <Form noValidate onSubmit={submit}>
-                <Container>
+                <Stack gap={2}>
                     {error !== "" ? <div className="text-danger">{error}</div> : null}
                     <Form.Group>
                         <h4><Form.Control
@@ -164,11 +163,11 @@ function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: {
                             {canteens?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group className="d-flex justify-content-center">
+                    <Form.Group className="d-flex justify-content-center gap-2">
                         <Button type="submit">Uložiť</Button>
                         <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
-                </Container>
+                </Stack>
             </Form>
         </ListGroupItem>
     );
