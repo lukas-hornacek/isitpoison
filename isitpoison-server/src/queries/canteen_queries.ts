@@ -57,7 +57,7 @@ export async function update_canteen(id: number, name: string, location: string,
         name=$1, location=$2, monday_open=$3, monday_close=$4, tuesday_open=$5, tuesday_close=$6,
         wednesday_open=$7, wednesday_close=$8, thursday_open=$9, thursday_close=$10, friday_open=$11,
         friday_close=$12, saturday_open=$13, saturday_close=$14, sunday_open=$15, sunday_close=$16
-        WHERE canteen_id=$17`,
+        WHERE id=$17`,
         values: [name, location, monday_open, monday_close, tuesday_open, tuesday_close,
             wednesday_open, wednesday_close, thursday_open, thursday_close, friday_open,
             friday_close, saturday_open, saturday_close, sunday_open, sunday_close, id],

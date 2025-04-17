@@ -32,7 +32,7 @@ export function today(): Weekday {
 }
 
 export function hoursToString(open?: string, close?: string) {
-    return open ? `${open.substring(0, 5)} - ${close?.substring(0, 5)}` : "Zatvorené";
+    return open && close ? `${open} - ${close}` : "Zatvorené";
 };
 
 export function dateToString(date: string) {

@@ -13,7 +13,16 @@ export const canteen_router = express.Router();
 canteen_router.get("/", async (req, res) => {
     const search = req.query["search"]?.toString().toLowerCase();
 
-    res.json((await select_canteens(search)).rows);
+    const result = (await select_canteens(search)).rows.map(row => {
+        const newRow = {...row};
+        for (const hour of hours) {
+            if (newRow[hour]) {
+                newRow[hour] = newRow[hour].toString().substring(0, 5);
+            }
+        }
+        return newRow;
+    });
+    res.json(result);
 });
 
 canteen_router.get("/:id(\\d+)", async (req, res) => {
@@ -24,7 +33,15 @@ canteen_router.get("/:id(\\d+)", async (req, res) => {
     if (result.rowCount === 0) {
         res.status(404).send("canteen not found.");
     } else {
-        res.json(result.rows[0]);
+        res.json(result.rows.map(row => {
+            const newRow = {...row};
+            for (const hour of hours) {
+                if (newRow[hour]) {
+                    newRow[hour] = newRow[hour].toString().substring(0, 5);
+                }
+            }
+            return newRow;
+        })[0]);
     }
 });
 
@@ -66,11 +83,8 @@ canteen_router.post("/", async (req, res) => {
             return;
         }
         for (const hour of hours) {
-            if (typeof canteen[hour] !== "string") {
-                res.status(400).send(`field '${hour}' of type string in HH:MM format is required`);
-                return;
-            }
-            if (!/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour])) {
+            if (canteen[hour] !== undefined && (typeof canteen[hour] !== "string"
+                || !/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour]))) {
                 res.status(400).send(`field '${hour}' must be in HH:MM format`);
                 return;
             }
@@ -113,12 +127,9 @@ canteen_router.put("/:id(\\d+)", async (req, res) => {
             return;
         }
         for (const hour of hours) {
-            if (typeof canteen[hour] !== "string") {
-                res.status(400).send(`field '${hour}' of type string in HH:MM format is required`);
-                return;
-            }
-            if (!/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour])) {
-                res.status(400).send(`field '${hour}' must be in HH:MM format'`);
+            if (canteen[hour] !== undefined && (typeof canteen[hour] !== "string"
+                || !/^([01][0-9]|2[0-3]):([0-5][0-9])$/.test(canteen[hour]))) {
+                res.status(400).send(`field '${hour}' must be in HH:MM format`);
                 return;
             }
         }
