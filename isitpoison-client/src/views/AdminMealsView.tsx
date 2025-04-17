@@ -21,6 +21,8 @@ export default function AdminMealsView() {
     const [searchText, setSearchText] = useState("");
     const [finalText, setFinalText] = useState<string | undefined>(); 
     const [isAddingMeal, setIsAddingMeal] = useState(false);
+    // if is adding or editing meal, prevent from other mutation at the same time
+    const [isMutating, setIsMutating] = useState(false);
 
     const { meals, isLoading } = useGetMeals(undefined, undefined, finalText);
 
@@ -34,7 +36,13 @@ export default function AdminMealsView() {
         return <Spinner />;
     }
 
-    const mealItems = meals!.map(meal => <AdminMealItem key={meal.id} meal={meal} />);
+    const setAdding = (b: boolean) => {
+        setIsAddingMeal(b);
+        setIsMutating(b);
+    };
+
+    const mealItems = meals!.map(meal => <AdminMealItem key={meal.id} meal={meal}
+        isMutating={isMutating} setIsMutating={setIsMutating} />);
 
     const weeklyScript = async () => {
         await fetch("/api/meal/update/weekly", {
@@ -57,7 +65,7 @@ export default function AdminMealsView() {
             <ButtonToolbar className="d-flex justify-content-center gap-2">
                 <Button onClick={weeklyScript}>Týždenné zmeny</Button>
                 <Button onClick={dailyScript}>Denné zmeny</Button>
-                {isAddingMeal ? null : <Button onClick={() => setIsAddingMeal(true)}>Pridať jedlo</Button>}
+                {isAddingMeal ? null : <Button onClick={() => setAdding(true)} disabled={isMutating}>Pridať jedlo</Button>}
                 <InputGroup>
                     <Form.Control
                         type="text"
@@ -70,9 +78,8 @@ export default function AdminMealsView() {
                 </InputGroup>
             </ButtonToolbar>
 
+            {isAddingMeal ? <AdminAddMeal initialName={""} initialCanteen={1} setAdding={setAdding} /> : null}
             <ListGroup>
-                {isAddingMeal ? <AdminAddMeal initialName={""} initialCanteen={1} 
-                setIsDisplayed={setIsAddingMeal} /> : null}
                 {mealItems}
             </ListGroup>
         </Stack>
@@ -80,7 +87,8 @@ export default function AdminMealsView() {
     );
 }
 
-function AdminMealItem({ meal }: { meal: Meal }) {
+function AdminMealItem({ meal, isMutating, setIsMutating }: { meal: Meal, isMutating: boolean,
+    setIsMutating: React.Dispatch<React.SetStateAction<boolean>> }) {
     const { canteens, isLoading } = useGetCanteens();
     const [isEditing, setIsEditing] = useState(false);
 
@@ -88,10 +96,15 @@ function AdminMealItem({ meal }: { meal: Meal }) {
         await deleteMeal(meal.id);
     };
 
+    const setEditing = (b: boolean) => {
+        setIsEditing(b);
+        setIsMutating(b);
+    };
+
     if (isEditing) {
         return (
             <AdminAddMeal initialName={meal.name} initialCanteen={meal.canteen_id} 
-            setIsDisplayed={setIsEditing} mealId={meal.id} />
+            setAdding={setEditing} mealId={meal.id} />
         );
     } else {
         return (
@@ -102,7 +115,7 @@ function AdminMealItem({ meal }: { meal: Meal }) {
                     <Col>Naposledy podávané: {meal.last_served}</Col>
                     <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>
-                        <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
+                        <Button onClick={() => setEditing(true)} disabled={isMutating}>Upraviť</Button>
                     </Col>
                 </Row>
                 <RatingDisplay rating={Number(meal.rating)} precision={2} />
@@ -111,8 +124,8 @@ function AdminMealItem({ meal }: { meal: Meal }) {
     }
 }
 
-function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: { initialName: string, initialCanteen: number,
-    setIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>, mealId?: number }) {
+function AdminAddMeal({ initialName, initialCanteen, setAdding, mealId }: { initialName: string, initialCanteen: number,
+    setAdding: (b: boolean) => void, mealId?: number }) {
     const { canteens, isLoading } = useGetCanteens();
 
     // form fields
@@ -135,14 +148,14 @@ function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: {
 
         const ok = mealId ? await updateMeal(mealId, name, canteen) : await addMeal(name, canteen);
         if (ok) {
-            setIsDisplayed(false);
+            setAdding(false);
         } else {
             setError("Pridanie jedla bolo neúspešné.");
         }
     };
 
     return (
-        <ListGroupItem key={mealId ?? -1} variant="dark">
+        <ListGroup><ListGroupItem key={mealId ?? -1} variant="dark">
             <Form noValidate onSubmit={submit}>
                 <Stack gap={2}>
                     {error !== "" ? <div className="text-danger">{error}</div> : null}
@@ -164,11 +177,11 @@ function AdminAddMeal({ initialName, initialCanteen, setIsDisplayed, mealId }: {
                         </Form.Select>
                     </Form.Group>
                     <Form.Group className="d-flex justify-content-center gap-2">
-                        <Button type="submit">Uložiť</Button>
-                        <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
+                        <Button type="submit">{mealId ? "Uložiť" : "Pridať"}</Button>
+                        <Button onClick={() => setAdding(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
                 </Stack>
             </Form>
-        </ListGroupItem>
+        </ListGroupItem></ListGroup>
     );
 }

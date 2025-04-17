@@ -1,4 +1,4 @@
-import { Button, Container, Modal, Spinner, Stack } from "react-bootstrap";
+import { Button, Container, ListGroup, Modal, Spinner, Stack } from "react-bootstrap";
 import { Meal } from "../types";
 import ReviewList from "./ReviewList";
 import { useGetReviewsByMeal } from "../data/review";
@@ -17,15 +17,19 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
     
     const [isPostingReview, setIsPostingReview] = useState(false);
 
-    const postReview = isPostingReview ? <PostReview mealId={meal.id} setIsDisplayed={setIsPostingReview} />
-        : <div className="d-flex justify-content-end">
-            <Button onClick={() => setIsPostingReview(true)}>Pridať recenziu</Button>
+    const hasReview: boolean = reviews.reviews?.some(r => r.user_id === auth.userId) ?? false;
+
+    const ownReview = <ReviewList reviews={reviews.reviews?.filter(r => r.user_id === auth.userId) ?? []}/>;
+    
+    const postReview = isPostingReview ? <ListGroup><PostReview mealId={meal.id} setIsDisplayed={setIsPostingReview} /></ListGroup>
+        : hasReview ? ownReview : <div className="d-flex justify-content-end">
+            <Button onClick={() => setIsPostingReview(true)} disabled={hasReview}>Pridať recenziu</Button>
         </div>;
 
     return (
         <Modal show={show} onHide={handleClose} centered size="xl">
             <Modal.Header closeButton>
-                <Stack>
+                <Stack gap={2}>
                     <h2>{meal.name}</h2>
                     <Container className="d-flex justify-content-center">
                         <RatingDisplay rating={Number(meal.rating)} precision={2}/>
@@ -39,8 +43,10 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
                 </Stack>
             </Modal.Header>
             <Modal.Body>
-                {auth.isLoggedIn && !auth.isAdmin ? postReview : null}
-                {reviews.isLoading ? <Spinner /> : <ReviewList reviews={reviews.reviews ?? []}/>}
+                <Stack gap={2}>
+                    {auth.isLoggedIn && !auth.isAdmin ? postReview : null}
+                    {reviews.isLoading ? <Spinner /> : <ReviewList reviews={reviews.reviews?.filter(r => r.user_id !== auth.userId) ?? []}/>}
+                </Stack>
             </Modal.Body>
         </Modal> 
     );

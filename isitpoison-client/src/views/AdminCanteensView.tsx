@@ -12,6 +12,8 @@ export default function AdminCanteensView() {
     const [searchText, setSearchText] = useState("");
     const [finalText, setFinalText] = useState("");
     const [isAddingCanteen, setIsAddingCanteen] = useState(false);
+    // if is adding or editing canteen, prevent from other mutation at the same time
+    const [isMutating, setIsMutating] = useState(false);
 
     const { canteens, isLoading } = useGetCanteens(finalText);
 
@@ -25,14 +27,20 @@ export default function AdminCanteensView() {
         return <Spinner />;
     }
 
-    const canteenItems = canteens?.map(canteen => <AdminCanteenItem key={canteen.id} canteen={canteen}/>);
+    const setAdding = (b: boolean) => {
+        setIsAddingCanteen(b);
+        setIsMutating(b);
+    };
+
+    const canteenItems = canteens?.map(canteen => <AdminCanteenItem key={canteen.id} canteen={canteen}
+        isMutating={isMutating} setIsMutating={setIsMutating}/>);
 
     return (
         <Container>
         <Stack gap={2}>
             <h2>Jedálne</h2>
             <ButtonToolbar className="d-flex justify-content-center gap-2">
-                {isAddingCanteen ? null : <Button onClick={() => setIsAddingCanteen(true)}>Pridať jedáleň</Button>}
+                {isAddingCanteen ? null : <Button onClick={() => setAdding(true)} disabled={isMutating}>Pridať jedáleň</Button>}
                 <InputGroup>
                     <Form.Control
                         type="text"
@@ -45,8 +53,8 @@ export default function AdminCanteensView() {
                 </InputGroup>
             </ButtonToolbar>
 
+            {isAddingCanteen ? <AdminAddCanteen setAdding={setAdding} /> : null}
             <ListGroup>
-                {isAddingCanteen ? <AdminAddCanteen setIsDisplayed={setIsAddingCanteen} /> : null}
                 {canteenItems}
             </ListGroup>
         </Stack>
@@ -54,15 +62,21 @@ export default function AdminCanteensView() {
     );
 }
 
-function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
+function AdminCanteenItem({ canteen, isMutating, setIsMutating }: { canteen: Canteen, isMutating: boolean,
+    setIsMutating: React.Dispatch<React.SetStateAction<boolean>>}) {
     const [isEditing, setIsEditing] = useState(false);
 
     const remove = async () => {
         await deleteCanteen(canteen.id);
     };
 
+    const setEditing = (b: boolean) => {
+        setIsEditing(b);
+        setIsMutating(b);
+    };
+
     if (isEditing) {
-        return <AdminAddCanteen canteen={canteen} setIsDisplayed={setIsEditing} />;
+        return <AdminAddCanteen canteen={canteen} setAdding={setEditing} />;
     } else {
         return (
             <ListGroupItem key={canteen.id} variant="dark">
@@ -72,7 +86,7 @@ function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
                     </Col>
                     <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>
-                        <Button onClick={() => setIsEditing(true)}>Upraviť</Button>
+                        <Button onClick={() => setEditing(true)} disabled={isMutating}>Upraviť</Button>
                     </Col>
                 </Row>
                 <CanteenInformation canteen={canteen} />
@@ -81,7 +95,7 @@ function AdminCanteenItem({ canteen }: { canteen: Canteen }) {
     }
 }
 
-function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>, canteen?: Canteen }) {
+function AdminAddCanteen({ setAdding, canteen }: { setAdding: (b: boolean) => void, canteen?: Canteen }) {
     // form fields
     const [name, setName] = useState(canteen?.name ?? "");
     const [address, setAddress] = useState(canteen?.location ?? "");
@@ -105,21 +119,36 @@ function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Di
     const submit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const ok = canteen ? await updateCanteen(canteen.id, name, address, mondayOpen, mondayClose,
-            tuesdayOpen, tuesdayClose, wednesdayOpen, wednesdayClose, thursdayOpen, thursdayClose,
-            fridayOpen, fridayClose, saturdayOpen, saturdayClose, sundayOpen, sundayClose) 
-            : await addCanteen(name, address, mondayOpen, mondayClose, tuesdayOpen, tuesdayClose,
-            wednesdayOpen, wednesdayClose, thursdayOpen, thursdayClose, fridayOpen, fridayClose,
-            saturdayOpen, saturdayClose, sundayOpen, sundayClose);
+        if (name === "" || address  === "") {
+            setError("Názov a adresa sú povinné polia.");
+            return;
+        }
+
+        const ok = canteen ? await updateCanteen(canteen.id, name, address,
+            mondayOpen === "" ? undefined : mondayOpen, mondayClose === "" ? undefined : mondayClose,
+            tuesdayOpen === "" ? undefined : tuesdayOpen, tuesdayClose === "" ? undefined : tuesdayClose,
+            wednesdayOpen === "" ? undefined : wednesdayOpen, wednesdayClose === "" ? undefined : wednesdayClose,
+            thursdayOpen === "" ? undefined : thursdayOpen, thursdayClose === "" ? undefined : thursdayClose,
+            fridayOpen === "" ? undefined : fridayOpen, fridayClose === "" ? undefined : fridayClose,
+            saturdayOpen === "" ? undefined : saturdayOpen, saturdayClose === "" ? undefined : saturdayClose,
+            sundayOpen === "" ? undefined : sundayOpen, sundayClose === "" ? undefined : sundayClose) 
+            : await addCanteen(name, address,
+            mondayOpen === "" ? undefined : mondayOpen, mondayClose === "" ? undefined : mondayClose,
+            tuesdayOpen === "" ? undefined : tuesdayOpen, tuesdayClose === "" ? undefined : tuesdayClose,
+            wednesdayOpen === "" ? undefined : wednesdayOpen, wednesdayClose === "" ? undefined : wednesdayClose,
+            thursdayOpen === "" ? undefined : thursdayOpen, thursdayClose === "" ? undefined : thursdayClose,
+            fridayOpen === "" ? undefined : fridayOpen, fridayClose === "" ? undefined : fridayClose,
+            saturdayOpen === "" ? undefined : saturdayOpen, saturdayClose === "" ? undefined : saturdayClose,
+            sundayOpen === "" ? undefined : sundayOpen, sundayClose === "" ? undefined : sundayClose);
         if (ok) {
-            setIsDisplayed(false);
+            setAdding(false);
         } else {
             setError("Pridanie jedla bolo neúspešné.");
         }
     };
 
     return (
-        <ListGroupItem key={canteen?.id ?? -1} variant="dark">
+        <ListGroup><ListGroupItem key={canteen?.id ?? -1} variant="dark">
             <Form onSubmit={submit}>
                 <Stack gap={2}>
                     {error !== "" ? <div className="text-danger">{error}</div> : null}
@@ -142,12 +171,12 @@ function AdminAddCanteen({ setIsDisplayed, canteen }: { setIsDisplayed: React.Di
                         <OpeningHours day={Weekday.Sunday} open={sundayOpen} setOpen={setSundayOpen} close={sundayClose} setClose={setSundayClose}/>
                     </Form.Group>
                     <Form.Group className="d-flex justify-content-center gap-2">
-                        <Button type="submit">Pridať</Button>
-                        <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
+                        <Button type="submit">{canteen ? "Uložiť" : "Pridať"}</Button>
+                        <Button onClick={() => setAdding(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
                 </Stack>
             </Form>
-        </ListGroupItem>
+        </ListGroupItem></ListGroup>
     );
 }
 
