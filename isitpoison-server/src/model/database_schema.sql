@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS reviews, users, weekly_meals, meals, canteens;
+DROP TABLE IF EXISTS session, reviews, users, weekly_meals, meals, canteens;
 
 -- if X_open is NULL, canteen is not open for day X
 CREATE TABLE canteens (
@@ -24,7 +24,7 @@ CREATE TABLE canteens (
 CREATE TABLE meals (
     id serial primary key,
     name varchar(128) not null,
-    canteen_id int references canteens(id) not null ON DELETE CASCADE,
+    canteen_id int  not null references canteens(id) ON DELETE CASCADE,
     last_served date CHECK (last_served <= CURRENT_DATE),
     uploaded date not null CHECK (uploaded <= CURRENT_DATE),
     UNIQUE (name, canteen_id)
