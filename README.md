@@ -17,8 +17,10 @@ To deploy the application on a local machine follow these steps:
 
     2. Create tables in the database by running `isitpoisonserver/src/model/database_schema.sql` with user that has data definition privileges
 
-    3. Replace parameters in `isitpoisonserver/src/model/database_connection.ts` to be consistent with your PostgreSQL database
+    3. Create .env file with the following values: SESSION_SECRET, STATUS=development, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE
 
 3. Install dependencies with `npm install` in both `isitpoison-client` and `isitpoison-server` folders
 
-4. Build and deploy the app from `isitpoison` folder with `npm run start`
+4. Start client from `isitpoison-client` folder with `npm run dev`
+
+5. Start server from `isitpoison-server` folder with `npm run start`
