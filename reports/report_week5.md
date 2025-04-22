@@ -1,6 +1,6 @@
 # Info o projekte:
-- Meno a priezvisko: Lukáš
-- Názov projektu: Horňáček
+- Meno a priezvisko: Lukáš Horňáček
+- Názov projektu: Is it Poison?
 - Link na repozitár: https://github.com/lukas-hornacek/isitpoison
 
 # Info o reportovanej verzii:  
