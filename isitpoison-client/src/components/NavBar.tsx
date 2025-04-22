@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Nav } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router";
@@ -24,12 +24,16 @@ export default function NavBar() {
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container>
                     <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
-                    <NavLink to="/admin/meals">Jedlá</NavLink>
-                    <NavLink to="/admin/canteens">Jedálne</NavLink>
-                    <NavLink to="/admin/users">Používatelia</NavLink>
-                    <NavLink to="/admin/reviews">Recenzie</NavLink>
+                    
+                    <Nav className="flex-grow-1 d-flex align-items-stretch">
+                        <NavLink to="/admin/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
+                        <NavLink to="/admin/canteens" className="nav-link flex-fill text-center">Jedálne</NavLink>
+                        <NavLink to="/admin/users" className="nav-link flex-fill text-center">Používatelia</NavLink>
+                        <NavLink to="/admin/reviews" className="nav-link flex-fill text-center">Recenzie</NavLink>
+                    </Nav>
+                    
                     <Button onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
-                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                    {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
                     </Button>
                 </Container>
             </Navbar>
@@ -39,9 +43,13 @@ export default function NavBar() {
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container>
                     <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
-                    <NavLink to="/" end>Aktuálna ponuka</NavLink>
-                    <NavLink to="/meals">Jedlá</NavLink>
-                    <NavLink to="/profile">Profil</NavLink>
+
+                    <Nav className="flex-grow-1 d-flex align-items-stretch">
+                        <NavLink to="/" end className="nav-link flex-fill text-center">Aktuálna ponuka</NavLink>
+                        <NavLink to="/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
+                        <NavLink to="/profile" className="nav-link flex-fill text-center">Profil</NavLink>
+                    </Nav>
+
                     <Button onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
                         {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
                     </Button>

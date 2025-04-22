@@ -52,7 +52,7 @@ export default function PostReview({ mealId, setIsDisplayed, review }: { mealId:
                             onChange={(e) => setText(e.target.value)}/>
                     </Form.Group>
                     <Form.Group className="d-flex justify-content-center gap-2">
-                        <Button type="submit">Pridať</Button>
+                        <Button type="submit">{review ? "Uložiť" : "Pridať"}</Button>
                         <Button onClick={() => setIsDisplayed(false)} variant="danger">Zrušiť</Button>
                     </Form.Group>
                 </Stack>
