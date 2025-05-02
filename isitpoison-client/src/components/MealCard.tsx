@@ -16,7 +16,7 @@ export default function MealCard({ meal }: { meal: Meal }) {
     return (
         <>
             <Col key={meal.id} lg={3} md={4} sm={6} xs={12} className="d-flex justify-content-center">
-                <Card style={{ width: "100%", maxWidth: "15em" }} className="shadow">
+                <Card className="shadow">
                     <Card.Body className="d-flex flex-column">
                         <Card.Title>{meal.name}</Card.Title>
                         <Card.Subtitle><RatingDisplay rating={Number(meal.rating)} precision={2} /></Card.Subtitle>

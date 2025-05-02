@@ -39,7 +39,7 @@ export default function PostReview({ mealId, setIsDisplayed, review }: { mealId:
         <ListGroupItem variant="dark">
             <Form onSubmit={submit}>
                 <Stack gap={2}>
-                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    {error !== "" ? <p className="text-danger">{error}</p> : null}
                     <Form.Group>
                         <Form.Label>Hodnotenie</Form.Label>
                         <RatingInput selected={rating} setSelected={setRating}/>

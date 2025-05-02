@@ -14,6 +14,6 @@ export default function RatingDisplay({ rating, precision }: { rating: number, p
     }
 
     return (
-        <>{stars} {rating.toFixed(precision)}</>
+        <p>{stars} {rating.toFixed(precision)}</p>
     );
 }

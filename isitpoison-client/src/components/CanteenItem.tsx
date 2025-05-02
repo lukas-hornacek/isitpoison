@@ -57,7 +57,7 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
                     Detail
                 </Button>
             </h2>
-            <div className="d-flex justify-content-center">{hours}</div>
+            <p className="d-flex justify-content-center">{hours}</p>
 
             <Container>
                 <Row className="g-4">

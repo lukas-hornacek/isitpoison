@@ -69,6 +69,11 @@ h3, h4 {
     border-color:  #be4f85 !important;
 }
 
+.card {
+    width: 100%;
+    max-width: 15em;
+}
+
 .card-body, .modal-content {
     background-color: #C9AF94 !important;
 }
@@ -84,4 +89,9 @@ h3, h4 {
 
 .dropdown-menu {
     background-color: #94C9AF !important;
+}
+
+p {
+    margin: 0em;
+    color: #2a1e11;
 }

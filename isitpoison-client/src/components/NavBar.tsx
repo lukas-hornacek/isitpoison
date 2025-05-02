@@ -33,7 +33,7 @@ export default function NavBar() {
                     </Nav>
                     
                     <Button onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
-                    {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
                     </Button>
                 </Container>
             </Navbar>

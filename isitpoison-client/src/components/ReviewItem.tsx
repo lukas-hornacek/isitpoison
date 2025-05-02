@@ -43,7 +43,7 @@ export default function ReviewItem({ review }: { review: Review }) {
                     </Col>
                 </Row>
                 <RatingDisplay rating={review.rating} precision={0}/>
-                {review.text ? <div>Text: {review.text}</div>: null}
+                {review.text ? <p>{review.text}</p>: null}
             </ListGroupItem>
         );
     }

@@ -151,7 +151,7 @@ function AdminAddCanteen({ setAdding, canteen }: { setAdding: (b: boolean) => vo
         <ListGroup><ListGroupItem key={canteen?.id ?? -1} variant="dark">
             <Form onSubmit={submit}>
                 <Stack gap={2}>
-                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    {error !== "" ? <p className="text-danger">{error}</p> : null}
                     <Form.Group>
                         <Form.Label>Názov</Form.Label>
                         <Form.Control value={name} onChange={(e) => setName(e.target.value)} type="text"/>
@@ -161,7 +161,7 @@ function AdminAddCanteen({ setAdding, canteen }: { setAdding: (b: boolean) => vo
                         <Form.Control value={address} onChange={(e) => setAddress(e.target.value)} type="text" />
                     </Form.Group>
                     <Form.Group>
-                        Otváracie hodiny
+                        <Form.Label>Otváracie hodiny</Form.Label>
                         <OpeningHours day={Weekday.Monday} open={mondayOpen} setOpen={setMondayOpen} close={mondayClose} setClose={setMondayClose} />
                         <OpeningHours day={Weekday.Tuesday} open={tuesdayOpen} setOpen={setTuesdayOpen} close={tuesdayClose} setClose={setTuesdayClose} />
                         <OpeningHours day={Weekday.Wednesday} open={wednesdayOpen} setOpen={setWednesdayOpen} close={wednesdayClose} setClose={setWednesdayClose}/>
@@ -183,12 +183,12 @@ function AdminAddCanteen({ setAdding, canteen }: { setAdding: (b: boolean) => vo
 function OpeningHours({ day, open, setOpen, close, setClose }: { day: Weekday, open: string, setOpen: React.Dispatch<React.SetStateAction<string>>,
     close: string, setClose: React.Dispatch<React.SetStateAction<string>>}) {
     return (
-        <>
+        <p>
             <Row><Col>{weekdayToString(day)}</Col></Row>
             <Row>
                 <Col>Od: <Form.Control value={open} onChange={(e) => setOpen(e.target.value)} type="text"/></Col>
                 <Col>Do: <Form.Control value={close} onChange={(e) => setClose(e.target.value)} type="text"/></Col>
             </Row>
-        </>
+        </p>
     );
 }

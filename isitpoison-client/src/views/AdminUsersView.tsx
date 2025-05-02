@@ -3,6 +3,7 @@ import { AuthenticationContext } from "../auth/AuthenticationContext";
 import { Button, ButtonToolbar, Col, Container, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner, Stack } from "react-bootstrap";
 import { deleteUser, useGetUsers } from "../data/user";
 import { User } from "../types";
+import { dateToString } from "../common";
 
 export default function AdminUsersView() {
     const auth = useContext(AuthenticationContext)!;
@@ -64,8 +65,8 @@ function AdminUserItem({ user }: { user: User }) {
                     <Button variant="danger" onClick={remove}>Odstrániť</Button>
                 </Col>
             </Row>
-            Používateľom od {user.joined.toString()} <br></br>
-            {user.is_admin ? null : `Počet recenzií: ${user.reviews}`}
+            <p>Používateľom od {dateToString(user.joined.toString())}</p>
+            <p>{user.is_admin ? null : `Počet recenzií: ${user.reviews}`}</p>
         </ListGroupItem>
     );
 }

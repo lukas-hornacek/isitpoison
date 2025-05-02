@@ -57,7 +57,7 @@ export default function LoginView() {
         <Stack gap={2}>
             <Form noValidate onSubmit={submit}>
                 <Container>
-                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    {error !== "" ? <p className="text-danger">{error}</p> : null}
                     <Form.Group>
                         <Form.Label>Meno</Form.Label>
                         <Form.Control

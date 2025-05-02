@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import { addMeal, deleteMeal, updateMeal, useGetMeals } from "../data/meal";
 import { Button, ButtonToolbar, Col, Form, InputGroup, ListGroup, ListGroupItem, Row, Spinner, Stack } from "react-bootstrap";
 import { useContext, useState } from "react";
-import { Ordering } from "../common";
+import { dateToString, Ordering } from "../common";
 import { AuthenticationContext } from "../auth/AuthenticationContext";
 import RatingDisplay from "../components/RatingDisplay";
 import { Meal } from "../types";
@@ -111,8 +111,8 @@ function AdminMealItem({ meal, isMutating, setIsMutating }: { meal: Meal, isMuta
             <ListGroupItem key={meal.id} variant="dark">
                 <Row className="align-items-start">
                     <Col><h4>{meal.name}</h4></Col>
-                    <Col>Jedáleň: {isLoading ? <Spinner /> : canteens?.find(c => c.id === meal.canteen_id)?.name}</Col>
-                    <Col>Naposledy podávané: {meal.last_served}</Col>
+                    <Col><p>Jedáleň: {isLoading ? <Spinner /> : canteens?.find(c => c.id === meal.canteen_id)?.name}</p></Col>
+                    <Col><p>Naposledy podávané: {meal.last_served ? dateToString(meal.last_served) : null}</p></Col>
                     <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>
                         <Button onClick={() => setEditing(true)} disabled={isMutating}>Upraviť</Button>
@@ -158,14 +158,15 @@ function AdminAddMeal({ initialName, initialCanteen, setAdding, mealId }: { init
         <ListGroup><ListGroupItem key={mealId ?? -1} variant="dark">
             <Form noValidate onSubmit={submit}>
                 <Stack gap={2}>
-                    {error !== "" ? <div className="text-danger">{error}</div> : null}
+                    {error !== "" ? <p className="text-danger">{error}</p> : null}
                     <Form.Group>
-                        <h4><Form.Control
+                        <Form.Label>Názov</Form.Label>
+                        <Form.Control
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             type="text"
                             isValid={validated && name !== ""}
-                            isInvalid={validated && name === ""} /></h4>
+                            isInvalid={validated && name === ""} />
                         <Form.Control.Feedback type="invalid">
                             Názov nesmie byť prázdny
                         </Form.Control.Feedback>

@@ -11,21 +11,23 @@ export default function RatingInput({ selected, setSelected }: { selected: numbe
     
     return (
         <Container>
-            {[...Array(5)].map((_, index) => (
-                <span
-                    key={index}
-                    onMouseEnter={() => setHovered(index + 1)}
-                    onMouseLeave={() => setHovered(null)}
-                    onClick={() => handleClick(index)}
-                >
-                    {index + 1 <= (hovered ?? selected) ? (
-                        <FaStar color="#ffc107" />
-                    ) : (
-                        <FaRegStar color="#e4e5e9" />
-                    )}
-                </span>
-            ))}
-            {selected}
+            <p>
+                {[...Array(5)].map((_, index) => (
+                    <span
+                        key={index}
+                        onMouseEnter={() => setHovered(index + 1)}
+                        onMouseLeave={() => setHovered(null)}
+                        onClick={() => handleClick(index)}
+                    >
+                        {index + 1 <= (hovered ?? selected) ? (
+                            <FaStar color="#ffc107" />
+                        ) : (
+                            <FaRegStar color="#e4e5e9" />
+                        )}
+                    </span>
+                ))}
+                {selected}
+            </p>
         </Container>
     );
 }

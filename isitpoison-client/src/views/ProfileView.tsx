@@ -22,8 +22,8 @@ export default function ProfileView() {
                     <Col sm={12} md={3}>
                         {!user.user ? <Spinner animation="grow" />
                         : <><h3>{user.user.username}</h3>
-                        Používateľom od {dateToString(user.user.joined.toString())} <br></br>
-                        Počet recenzií: {user.user.reviews}</>}
+                        <p>Používateľom od {dateToString(user.user.joined.toString())}</p>
+                        <p>Počet recenzií: {user.user.reviews}</p></>}
                     </Col>
                     <Col sm={12} md={9}>
                         <h3>Moje recenzie</h3>
@@ -38,7 +38,7 @@ export default function ProfileView() {
             <Container>
             <Stack gap={2}>
                 <h2>Profil</h2>
-                <div>Na zobrazenie profilu je potrebné prihlásiť sa.</div>
+                <p>Na zobrazenie profilu je potrebné prihlásiť sa.</p>
             </Stack>
             </Container>
         );
