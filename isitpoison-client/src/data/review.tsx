@@ -41,6 +41,7 @@ export async function deleteReview(id: number, userId: number, mealId: number) {
 
     if (res.ok) {
         mutate("/api/review");
+        mutate(`/api/user/${userId}`);
         mutate(`/api/review/user/${userId}`);
         mutate(`/api/review/meal/${mealId}`);
     }
@@ -58,6 +59,7 @@ export async function addReview(mealId: number, userId: number, rating: number, 
 
     if (res.ok) {
         mutate("/api/review");
+        mutate(`/api/user/${userId}`);
         mutate(`/api/review/user/${userId}`);
         mutate(`/api/review/meal/${mealId}`);
     }
