@@ -6,7 +6,7 @@ import CanteenItem from "../components/CanteenItem";
 import WeekdayButtons from "../components/WeekdayButtons";
 import { today } from "../common";
 import { useGetCanteens } from "../data/canteen";
-import { Spinner } from "react-bootstrap";
+import { Accordion, Spinner } from "react-bootstrap";
 
 export default function WeeklyView() {
     const [day, setDay] = useState(today());
@@ -27,9 +27,11 @@ export default function WeeklyView() {
             <Container className="d-flex justify-content-center">
                 <WeekdayButtons day={day} setDay={setDay} />
             </Container>
-            <Stack gap={3}>
-                {canteenItems}
-            </Stack>
+            <Container className="d-flex justify-content-center">
+                <Accordion alwaysOpen className="w-100">
+                    {canteenItems}
+                </Accordion>
+            </Container>
         </Stack>
     );
 }

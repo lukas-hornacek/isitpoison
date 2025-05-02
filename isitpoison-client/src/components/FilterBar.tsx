@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, ButtonToolbar, Dropdown, Form, InputGroup, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { useGetCanteens } from "../data/canteen";
 import { Ordering, orderingToString, MealFilters } from "../common";
+import { FaCheckSquare, FaRegSquare, FaRegCircle, FaCheckCircle } from "react-icons/fa";
 
 export default function FilterBar({ filters, setFilters }: { filters: MealFilters, setFilters: React.Dispatch<React.SetStateAction<MealFilters>>}) {
     const { canteens, isLoading } = useGetCanteens();
@@ -26,18 +27,29 @@ export default function FilterBar({ filters, setFilters }: { filters: MealFilter
         <ToggleButton
             id={`tbc-${c.id}`}
             key={c.id}
-            type="checkbox"
             variant={selectedCanteens?.includes(c.id) ? "primary" : "outline-primary"}
-            value={c.id}>{c.name}</ToggleButton>
+            value={c.id}
+            className="d-flex align-items-center gap-2 text-start"
+        >
+            <span className="d-flex align-items-center justify-content-center" style={{ width: "1.25rem" }}>
+                {selectedCanteens?.includes(c.id) ? <FaCheckSquare size={16} /> : <FaRegSquare size={16} />}
+            </span>
+            {c.name}
+        </ToggleButton>
     );
     const orderingButtons = [Ordering.Alphabetical, Ordering.LastServed, Ordering.Rating].map(o =>
         <ToggleButton
             id={`tbo-${o}`}
             key={o}
-            type="radio"
             variant={ordering === o ? "primary" : "outline-primary"}
             value={o}
-        >{orderingToString(o)}</ToggleButton>
+            className="d-flex align-items-center gap-2 text-start"
+        >
+            <span className="d-flex align-items-center justify-content-center" style={{ width: "1.25rem" }}>
+                {ordering === o ? <FaCheckCircle size={16} /> : <FaRegCircle size={16} />}
+            </span>
+            {orderingToString(o)}
+        </ToggleButton>
     );
 
     return (

@@ -23,18 +23,23 @@ export default function NavBar() {
         return (
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container>
-                    <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
+                    <Navbar.Brand href="/" >Is it Poison?</Navbar.Brand>
+                    <Navbar.Toggle />
+
+                    <Navbar.Collapse>
+                        <Nav className="d-flex flex-column flex-lg-row flex-grow-1">
+                            <NavLink to="/admin/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
+                            <NavLink to="/admin/canteens" className="nav-link flex-fill text-center">Jedálne</NavLink>
+                            <NavLink to="/admin/users" className="nav-link flex-fill text-center">Používatelia</NavLink>
+                            <NavLink to="/admin/reviews" className="nav-link flex-fill text-center">Recenzie</NavLink>
+                        </Nav>
                     
-                    <Nav className="flex-grow-1 d-flex align-items-stretch">
-                        <NavLink to="/admin/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
-                        <NavLink to="/admin/canteens" className="nav-link flex-fill text-center">Jedálne</NavLink>
-                        <NavLink to="/admin/users" className="nav-link flex-fill text-center">Používatelia</NavLink>
-                        <NavLink to="/admin/reviews" className="nav-link flex-fill text-center">Recenzie</NavLink>
-                    </Nav>
-                    
-                    <Button onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
-                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
-                    </Button>
+                        <div className="d-flex justify-content-center">
+                            <Button className="m-2" onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
+                                {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                            </Button>
+                        </div>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
         );
@@ -43,16 +48,21 @@ export default function NavBar() {
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container>
                     <Navbar.Brand href="/">Is it Poison?</Navbar.Brand>
+                    <Navbar.Toggle />
 
-                    <Nav className="flex-grow-1 d-flex align-items-stretch">
-                        <NavLink to="/" end className="nav-link flex-fill text-center">Aktuálna ponuka</NavLink>
-                        <NavLink to="/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
-                        <NavLink to="/profile" className="nav-link flex-fill text-center">Profil</NavLink>
-                    </Nav>
+                    <Navbar.Collapse>
+                        <Nav className="d-flex flex-column flex-lg-row flex-grow-1">
+                            <NavLink to="/" end className="nav-link flex-fill text-center">Aktuálna ponuka</NavLink>
+                            <NavLink to="/meals" className="nav-link flex-fill text-center">Jedlá</NavLink>
+                            <NavLink to="/profile" className="nav-link flex-fill text-center">Profil</NavLink>
+                        </Nav>
 
-                    <Button onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
-                        {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
-                    </Button>
+                    <div className="d-flex justify-content-center">
+                        <Button className="m-2" onClick={() => auth.isLoggedIn ? logout() : navigate("/login")}>
+                            {auth.isLoggedIn ? "Odhlásiť" : "Prihlásiť"}
+                        </Button>
+                    </div>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
         );

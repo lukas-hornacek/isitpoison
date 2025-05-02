@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import { Canteen } from "../types";
 import { hoursToString, Weekday } from "../common";
 import MealCard from "./MealCard";
-import { Button, Spinner } from "react-bootstrap";
+import { Accordion, Col, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import CanteenModal from "./CanteenModal";
 import { useGetWeeklyMeals } from "../data/meal";
@@ -51,21 +51,44 @@ export default function CanteenItem({ canteen, weekday }: { canteen: Canteen, we
     }
 
     return (
-        <>
-            <h2>{canteen.name}
-                <Button onClick={handleShowDetail}>
-                    Detail
-                </Button>
-            </h2>
-            <p className="d-flex justify-content-center">{hours}</p>
+        <Accordion.Item eventKey={canteen.id.toString()}>
+            <Accordion.Header>
+                <Container className="d-flex justify-content-center">
+                    <Col>
+                        <h2>{canteen.name}</h2>
+                        <p className="d-flex justify-content-center">{hours}</p>
+                    </Col>
+                    <div className="mb-auto d-flex justify-content-end">
+                        <span
+                            role="button"
+                            tabIndex={0}
+                            className="btn btn-primary ms-3"
+                            onClick={(e) => {
+                                e.stopPropagation(); // Prevent accordion toggle
+                                handleShowDetail();
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    handleShowDetail();
+                                }
+                            }}
+                        >
+                            Detail
+                        </span>
+                    </div>
+                    
+                </Container>
+            </Accordion.Header>
+            <Accordion.Body>
+                <Container>
+                    <Row className="g-4">
+                        {mealItems}
+                    </Row>
+                </Container>
 
-            <Container>
-                <Row className="g-4">
-                    {mealItems}
-                </Row>
-            </Container>
-
-            <CanteenModal canteen={canteen} show={showDetail} handleClose={handleCloseDetail} />
-        </>
+                <CanteenModal canteen={canteen} show={showDetail} handleClose={handleCloseDetail} />
+            </Accordion.Body>
+        </Accordion.Item>
     );
 }

@@ -183,12 +183,12 @@ function AdminAddCanteen({ setAdding, canteen }: { setAdding: (b: boolean) => vo
 function OpeningHours({ day, open, setOpen, close, setClose }: { day: Weekday, open: string, setOpen: React.Dispatch<React.SetStateAction<string>>,
     close: string, setClose: React.Dispatch<React.SetStateAction<string>>}) {
     return (
-        <p>
-            <Row><Col>{weekdayToString(day)}</Col></Row>
+        <div>
+            <Row><Col><p>{weekdayToString(day)}</p></Col></Row>
             <Row>
-                <Col>Od: <Form.Control value={open} onChange={(e) => setOpen(e.target.value)} type="text"/></Col>
-                <Col>Do: <Form.Control value={close} onChange={(e) => setClose(e.target.value)} type="text"/></Col>
+                <Col><p>Od: </p><Form.Control value={open} onChange={(e) => setOpen(e.target.value)} type="text"/></Col>
+                <Col><p>Do: </p><Form.Control value={close} onChange={(e) => setClose(e.target.value)} type="text"/></Col>
             </Row>
-        </p>
+        </div>
     );
 }

@@ -111,7 +111,7 @@ function AdminMealItem({ meal, isMutating, setIsMutating }: { meal: Meal, isMuta
             <ListGroupItem key={meal.id} variant="dark">
                 <Row className="align-items-start">
                     <Col><h4>{meal.name}</h4></Col>
-                    <Col><p>Jedáleň: {isLoading ? <Spinner /> : canteens?.find(c => c.id === meal.canteen_id)?.name}</p></Col>
+                    <Col>{isLoading ? <Spinner /> : <p>Jedáleň: {canteens?.find(c => c.id === meal.canteen_id)?.name}</p>}</Col>
                     <Col><p>Naposledy podávané: {meal.last_served ? dateToString(meal.last_served) : null}</p></Col>
                     <Col className="d-flex justify-content-end gap-2">
                         <Button variant="danger" onClick={remove}>Odstrániť</Button>

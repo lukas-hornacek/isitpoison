@@ -18,7 +18,6 @@ export default function MealModal({ meal, show, handleClose }: { meal: Meal, sho
     const [isPostingReview, setIsPostingReview] = useState(false);
 
     const hasReview: boolean = reviews.reviews?.some(r => r.user_id === auth.userId) ?? false;
-
     const ownReview = <ReviewList reviews={reviews.reviews?.filter(r => r.user_id === auth.userId) ?? []}/>;
     
     const postReview = isPostingReview ? <ListGroup><PostReview mealId={meal.id} setIsDisplayed={setIsPostingReview} /></ListGroup>
